@@ -1,4 +1,5 @@
 import {Template} from '@/componente/Template'
+<<<<<<< HEAD
 import { Button } from '@/componente/button/Button'
 import { InputText } from "@/componente/input/InputText";
 
@@ -36,8 +37,23 @@ export default function RestaurantePage(){
                 </div>
 
             </div>    
+=======
+
+
+export default function RestaurantePage(){
+    return(
+        <Template>
+            <div>
+
+                
+            </div>
+>>>>>>> 34defce9b71b9542e9ab09a4585bd1722326bc9b
      
 
         </Template>
     )
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 34defce9b71b9542e9ab09a4585bd1722326bc9b
