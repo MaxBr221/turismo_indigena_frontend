@@ -1,4 +1,3 @@
-import { error } from "node:console";
 import { Restaurante } from "./restaurante.resource";
 
 class AuthRestaurante{
@@ -16,7 +15,7 @@ class AuthRestaurante{
         });
 
         if(!response.ok){
-            throw error("Erro ao buscar restaurantes")
+            throw new Error("Erro ao buscar restaurantes")
         }
         return response.json();
         
