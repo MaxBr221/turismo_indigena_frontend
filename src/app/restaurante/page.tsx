@@ -38,7 +38,10 @@ export default function RestaurantePage(){
                         <option>CENTRO</option>
                         <option>ALDEIA</option>
                     </select>
-                    <Button  label=""/>
+                    <Button type='submit'
+                            label='search'
+                            onClick={buscarRestaurante}
+                            style='bg-blue-500 hover:bg-blue-300'/>
                 </div>
 
 
