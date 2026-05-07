@@ -1,23 +1,33 @@
 import { Restaurante } from "./restaurante.resource";
 
 class AuthRestaurante{
-    baseUrl: string = 'http://localhost:8081/restaurantes';
+    baseUrl: string = 'http://localhost:8081/restaurantes/busca';
 
     async busca(query: string = "", local: string = ""): Promise<Restaurante[]> {
-        const response = await fetch(this.baseUrl, {
-            method: 'GET',
-            headers: {
-                "content-type": "application/json",
-                "Accept": "application/json"
+        try{
+            const url = `${this.baseUrl}?query=${query}&local=${local}`
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    "content-type": "application/json",
+                    "Accept": "application/json"
 
+                }
+            });
+
+            if(!response.ok){
+                throw new Error('Erro ao buscar restaurantes: ${response.status}')
+                
             }
-        });
-
-        if(!response.ok){
-            throw new Error("Erro ao buscar restaurantes")
+            return await response.json();
+        
+    
+        }catch(error){
+            console.error("erro:", error);
+            throw error;
             
         }
-        return response.json();
+        
         
     }
 
