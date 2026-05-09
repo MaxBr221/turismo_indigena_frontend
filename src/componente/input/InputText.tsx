@@ -20,7 +20,7 @@ export const InputText: React.FC<InputTextProps> = ({
             onChange={onChange}
             value={value}
             placeholder={placeholder}
-            className={`${style} text-white px-3 py-2 rounded-lg text-gray-900`}        
+            className={`${style} text-black font-bold px-3 py-2 rounded-lg text-gray-900`}        
         />
     )
 

@@ -8,14 +8,16 @@ interface TemplateProps{
 
 export const Template: React.FC<TemplateProps> = (props: TemplateProps) =>{
     return(
-        <>
+        <div className="flex flex-col min-h-screen w-full">
             <Header/>
 
-            
-                {props.children}
+                <main className="flex-1">
+                    {props.children}
+
+                </main>
 
             <Footer/>
             
-        </>
+        </div>
     )
 }
