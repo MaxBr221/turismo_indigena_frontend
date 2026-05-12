@@ -2,13 +2,27 @@
 import { InputText } from "@/componente/input/InputText";
 import { Template } from "@/componente/Template";
 import { useState } from "react";
+import { useFormik } from "formik";
 import { Button } from "@/componente/button/Button";
+import { formScheme, LoginForm } from "@/componente/login/formScheme";
+import { Credencial, TokenAcesso } from "@/resources/user/userResources";
 
 export default function LoginPage(){
     const [newUserStates, setNewUserStates] = useState<boolean> (true);
+    const {values, handleChange, handleSubmit, errors, resetForm} = useFormik<LoginForm>({
+        initialValues: formScheme,
+        onSubmit: onSubmit
+    })
 
-    async function onSubmit() {
-        const login = ""
+    async function onSubmit(values: LoginForm) {
+        console.log(values);
+        const credencial: Credencial = {login: values.login, senha: values.senha};
+        try{
+            const acesso: TokenAcesso = await au
+        }
+        
+        
+
         
     }
     return(
@@ -47,7 +61,7 @@ export default function LoginPage(){
 
                          <div className="mt-2">
                             <InputText style="w-full"
-                                        id="email"
+                                        id="login"
                                         placeholder="Digite seu Email"/>
                         </div>
 
@@ -57,7 +71,7 @@ export default function LoginPage(){
 
                         <div className="mt-2">
                             <InputText style="w-full"
-                                        id="password"
+                                        id="senha"
                                         type="password"
                                         placeholder="Digite sua Senha"/>
                         </div>
@@ -68,7 +82,7 @@ export default function LoginPage(){
 
                         <div className="mt-2">
                             <InputText style="w-full"
-                                        id="passwordMatch"
+                                        id="confirmarSenha"
                                         type="password"
                                         placeholder="Confirme sua Senha"/>
                         </div>
