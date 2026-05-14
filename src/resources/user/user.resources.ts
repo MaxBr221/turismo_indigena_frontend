@@ -12,7 +12,7 @@ export class Credencial{
 }
 
 export class TokenAcesso{
-    token?: string;
+    tokenAcesso?: string;
 }
 
 export class UsuarioSessaoToken{
