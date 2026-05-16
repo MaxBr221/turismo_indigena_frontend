@@ -5,9 +5,11 @@ import { useState } from "react";
 import { useFormik } from "formik";
 import { Button } from "@/componente/button/Button";
 import { formScheme, LoginForm } from "@/componente/login/formScheme";
-import { Credencial, TokenAcesso } from "@/resources/user/userResources";
+import { Credencial, TokenAcesso } from "@/resources/user/user.resources";
+import { userAuth } from "@/resources/user/authenticatio.user";
 
 export default function LoginPage(){
+    const auth = userAuth();
     const [newUserStates, setNewUserStates] = useState<boolean> (true);
     const {values, handleChange, handleSubmit, errors, resetForm} = useFormik<LoginForm>({
         initialValues: formScheme,
@@ -18,7 +20,10 @@ export default function LoginPage(){
         console.log(values);
         const credencial: Credencial = {login: values.login, senha: values.senha};
         try{
-            const acesso: TokenAcesso = await au
+            const acesso: TokenAcesso = await auth.userAuthentication(credencial);
+            console.log("Chegando na parte de token");
+        }catch(error){
+            throw
         }
         
         

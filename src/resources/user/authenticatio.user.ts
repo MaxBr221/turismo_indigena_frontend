@@ -8,12 +8,12 @@ import { jwtDecode } from "jwt-decode";
 
 
 class UserAuth{
-    baseString: string = 'http://localhost:8081/user/busca';
+    baseString: string = 'http://localhost:8081/auth/login';
     static AUTH_PARAM: string = "auth";
 
      async userAuthentication(credencial: Credencial): Promise<TokenAcesso>{
        
-        const response = await fetch(this.baseString + "/auth", {
+        const response = await fetch(this.baseString, {
             method: 'POST',
             body: JSON.stringify(credencial),
             headers: {
@@ -67,6 +67,19 @@ class UserAuth{
         }catch(error){}
 
     }
+    getUserSession() : UsuarioSessaoToken | null {
+        try{
+            const sessaoUser = localStorage.getItem(UserAuth.AUTH_PARAM);
+            if(!sessaoUser){
+                return null;
+            }
+            const token:UsuarioSessaoToken = JSON.parse(sessaoUser);
+            return token;
+        }catch(error){
+            return null;
+        }
+    }
 }
-    
+   
+export const userAuth = () => new UserAuth;
         
