@@ -3,21 +3,36 @@ import { Header } from "./Header"
 
 interface TemplateProps{
     children: React.ReactNode
+    loading?: boolean
 }
 
 
-export const Template: React.FC<TemplateProps> = (props: TemplateProps) =>{
+export const Template: React.FC<TemplateProps> = ({children, loading = true}: TemplateProps) =>{
     return(
-        <div className="flex flex-col min-h-screen w-full">
-            <Header/>
+        <>
+        
+            <div className="flex flex-col min-h-screen w-full">
+                <Header/>
 
-                <main className="flex-1">
-                    {props.children}
+                    <main className="flex-1">
+                        {children}
 
-                </main>
+                    </main>
 
-            <Footer/>
-            
-        </div>
+                <Footer/>
+                
+            </div>
+        </>    
     )
+}
+interface RenderIfProps{
+    condition?: boolean;
+    children: React.ReactNode;
+
+}
+export const RendeIf: React.FC<RenderIfProps> = ({condition = true, children}) =>{
+    if(condition){
+        return children;
+    }
+    return false;
 }

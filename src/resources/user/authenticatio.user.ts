@@ -1,5 +1,4 @@
 import { TokenAcesso, Usuario, Credencial, UsuarioSessaoToken } from "@/resources/user/user.resources"
-import { error } from "node:console";
 import { stringify } from "node:querystring";
 import { use } from "react";
 import { string } from "yup";
@@ -23,7 +22,7 @@ class UserAuth{
         
         });
         if(response.status == 401){
-            throw error("Senha incorreta.");
+            console.error("Senha incorreta.");
         }
         return await response.json();
     }

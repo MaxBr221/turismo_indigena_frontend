@@ -21,14 +21,12 @@ export default function LoginPage(){
         const credencial: Credencial = {login: values.login, senha: values.senha};
         try{
             const acesso: TokenAcesso = await auth.userAuthentication(credencial);
+            auth.initSession(acesso);
             console.log("Chegando na parte de token");
-        }catch(error){
-            throw
+        }catch(error: any){
+            console.log("erro")
         }
-        
-        
-
-        
+             
     }
     return(
         //conectar com o token amanhã
@@ -36,6 +34,11 @@ export default function LoginPage(){
             <div className="w-full text-center mt-4">
                 <div className="mt-2 py-3">
                     <h2 className="font-bold text-xl">Cadastro</h2>
+                </div>
+                <div>
+                    <h2>
+                        {newUserStates ? 'Cadastro' : 'Faça Login com sua Conta'}
+                    </h2>
                 </div>
 
                 <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -94,6 +97,7 @@ export default function LoginPage(){
 
                         <div>
                             <Button type="submit" style="bg-indigo-700 hover:bg-indigo-500 mt-3" label="Salvar" ></Button>
+                            <Button type="submit" style="bg-indigo-700 hover:bg-indigo-500 mt-3"></Button>
                         </div>
 
                         
