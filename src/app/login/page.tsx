@@ -1,6 +1,6 @@
 'use client'
 import { InputText } from "@/componente/input/InputText";
-import { Template } from "@/componente/Template";
+import { Template, RendeIf} from "@/componente/Template";
 import { useState } from "react";
 import { useFormik } from "formik";
 import { Button } from "@/componente/button/Button";
@@ -10,7 +10,7 @@ import { userAuth } from "@/resources/user/authenticatio.user";
 
 export default function LoginPage(){
     const auth = userAuth();
-    const [newUserStates, setNewUserStates] = useState<boolean> (true);
+    const [newUserStates, setNewUserStates] = useState<boolean> (false);
     const {values, handleChange, handleSubmit, errors, resetForm} = useFormik<LoginForm>({
         initialValues: formScheme,
         onSubmit: onSubmit
@@ -33,10 +33,7 @@ export default function LoginPage(){
         <Template>
             <div className="w-full text-center mt-4">
                 <div className="mt-2 py-3">
-                    <h2 className="font-bold text-xl">Cadastro</h2>
-                </div>
-                <div>
-                    <h2>
+                    <h2 className="font-bold text-xl">
                         {newUserStates ? 'Cadastro' : 'Faça Login com sua Conta'}
                     </h2>
                 </div>
@@ -96,20 +93,21 @@ export default function LoginPage(){
                         </div>
 
                         <div>
-                            <Button type="submit" style="bg-indigo-700 hover:bg-indigo-500 mt-3" label="Salvar" ></Button>
-                            <Button type="submit" style="bg-indigo-700 hover:bg-indigo-500 mt-3"></Button>
+                            <RendeIf condition={newUserStates}>
+                                <Button type="submit" 
+                                        style="bg-indigo-700 hover:bg-indigo-500 mt-3" 
+                                        label="Salvar"
+                                        onClick={event => setNewUserStates(false)} ></Button>
+                            </RendeIf>    
+
+                            <RendeIf condition={!newUserStates}>
+                                <Button type="submit" 
+                                        style="bg-indigo-700 hover:bg-indigo-500 mt-3" label="Login"></Button>
+                            </RendeIf>
                         </div>
-
-                        
                     </form>
-
-
-
                 </div>
-
             </div>
-
-
         </Template>
     )
 }

@@ -7,12 +7,12 @@ import { jwtDecode } from "jwt-decode";
 
 
 class UserAuth{
-    baseString: string = 'http://localhost:8081/auth/login';
+    baseString: string = 'http://localhost:8081/auth';
     static AUTH_PARAM: string = "auth";
 
      async userAuthentication(credencial: Credencial): Promise<TokenAcesso>{
        
-        const response = await fetch(this.baseString, {
+        const response = await fetch(this.baseString + "/login", {
             method: 'POST',
             body: JSON.stringify(credencial),
             headers: {
