@@ -1,5 +1,4 @@
 import { TokenAcesso, Usuario, Credencial, UsuarioSessaoToken } from "@/resources/user/user.resources"
-import { stringify } from "node:querystring";
 import { use } from "react";
 import { string } from "yup";
 import { jwtDecode } from "jwt-decode";
@@ -7,16 +6,17 @@ import { jwtDecode } from "jwt-decode";
 
 
 class UserAuth{
-    baseString: string = 'http://localhost:8081/auth';
+    baseString: string = "http://localhost:8081/auth";
     static AUTH_PARAM: string = "auth";
 
      async userAuthentication(credencial: Credencial): Promise<TokenAcesso>{
        
         const response = await fetch(this.baseString + "/login", {
+    
             method: 'POST',
             body: JSON.stringify(credencial),
             headers: {
-                "content-type": "application/json",
+                "Content-Type": "application/json",
                 "Accept": "application/json"
             }
         
@@ -30,11 +30,11 @@ class UserAuth{
     async save(user: Usuario): Promise<void>{
 
         const response = await fetch(this.baseString + "/register",{
-            method: "POST",
+            method: 'POST',
             body: JSON.stringify(user),
-            headers:{
-                "content-type":"application/json",
-                "Accept":"application/json"
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
             }
 
         });

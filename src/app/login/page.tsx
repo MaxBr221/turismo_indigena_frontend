@@ -4,7 +4,7 @@ import { Template, RendeIf} from "@/componente/Template";
 import { useState } from "react";
 import { useFormik } from "formik";
 import { Button } from "@/componente/button/Button";
-import { formScheme, LoginForm } from "@/componente/login/formScheme";
+import { LoginForm, formScheme, validationScheme } from "@/componente/login/formScheme";
 import { Credencial, TokenAcesso } from "@/resources/user/user.resources";
 import { userAuth } from "@/resources/user/authenticatio.user";
 
@@ -12,7 +12,11 @@ export default function LoginPage(){
     const auth = userAuth();
     const [newUserStates, setNewUserStates] = useState<boolean> (false);
     const {values, handleChange, handleSubmit, errors, resetForm} = useFormik<LoginForm>({
-        initialValues: formScheme,
+        initialValues:{
+            login: '',
+            senha: ''
+
+        },
         onSubmit: onSubmit
     })
 
@@ -29,7 +33,7 @@ export default function LoginPage(){
              
     }
     return(
-        //conectar com o token amanhã
+        
         <Template>
             <div className="w-full text-center mt-4">
                 <div className="mt-2 py-3">
@@ -39,34 +43,43 @@ export default function LoginPage(){
                 </div>
 
                 <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                    <form   className="space-y-2">
-                        <div className="flex items-center gap-4">
+                    <form onSubmit={handleSubmit} className="space-y-2">
+                        <RendeIf condition={newUserStates}>
+                            <div className="flex items-center gap-4">
                             <label className="block text-sm font-medium leading-6 text-gray-900 flex items-center gap-4">Nome:</label>
-                        </div>
-                        <div className="mt-2">
-                            <InputText style="w-full"
-                                        id="name"
-                                        placeholder="Digite seu Nome"/>
-                        </div>
+                            </div>
+                            <div className="mt-2">
+                                <InputText className="w-full"
+                                            id="name"
+                                            name="name"
+                                            placeholder="Digite seu Nome"/>
+                            </div>
 
-                        <div className="flex items-center gap-4">
-                            <label className="block text-sm font-medium leading-6 text-gray-900">Telefone:</label>
-                        </div>
+                        </RendeIf>
+                        
+                        <RendeIf condition={newUserStates}>
+                            <div className="flex items-center gap-4">
+                                <label className="block text-sm font-medium leading-6 text-gray-900">Telefone:</label>
+                            </div>
 
-                         <div className="mt-2">
-                            <InputText style="w-full"
-                                        id="number"
-                                        placeholder="Digite seu Número"/>
-                        </div>
+                            <div className="mt-2">
+                                <InputText className="w-full"
+                                            id="number"
+                                            name="number"
+                                            placeholder="Digite seu Número"/>
+                            </div>
 
-
+                        </RendeIf>
                         <div className="flex items-center gap-4">
                             <label className="block text-sm font-medium leading-6 text-gray-900">Login:</label>
                         </div>
 
                          <div className="mt-2">
-                            <InputText style="w-full"
+                            <InputText className="w-full"
                                         id="login"
+                                        name="login"
+                                        value={values.login}
+                                        onChange={handleChange}
                                         placeholder="Digite seu Email"/>
                         </div>
 
@@ -75,34 +88,56 @@ export default function LoginPage(){
                         </div>
 
                         <div className="mt-2">
-                            <InputText style="w-full"
+                            <InputText className="w-full"
                                         id="senha"
+                                        name="senha"
                                         type="password"
+                                        value={values.senha}
+                                        onChange={handleChange}
                                         placeholder="Digite sua Senha"/>
                         </div>
-
-                         <div className="flex items-center gap-4">
-                            <label className="block text-sm font-medium leading-6 text-gray-900">Confirmar senha:</label>
-                        </div>
-
-                        <div className="mt-2">
-                            <InputText style="w-full"
+                        <RendeIf condition={newUserStates}>
+                            <div className="flex items-center gap-4">
+                                <label className="block text-sm font-medium leading-6 text-gray-900">Confirmar senha:</label>
+                            </div>
+                            <div className="mt-2">
+                            <InputText className="w-full"
                                         id="confirmarSenha"
+                                        name="confirmarSenha"
                                         type="password"
                                         placeholder="Confirme sua Senha"/>
-                        </div>
+                            </div>
+
+
+                        </RendeIf> 
 
                         <div>
                             <RendeIf condition={newUserStates}>
                                 <Button type="submit" 
                                         style="bg-indigo-700 hover:bg-indigo-500 mt-3" 
-                                        label="Salvar"
-                                        onClick={event => setNewUserStates(false)} ></Button>
+                                        label="Salvar"/>
+                                        
+                                <span 
+                                    onClick={() => setNewUserStates(false)} 
+                                    className="block text-sm text-indigo-600 hover:underline mt-4 cursor-pointer"
+                                >
+                                    Já possui conta? Faça Login
+                                </span>
+
+
                             </RendeIf>    
 
                             <RendeIf condition={!newUserStates}>
                                 <Button type="submit" 
-                                        style="bg-indigo-700 hover:bg-indigo-500 mt-3" label="Login"></Button>
+                                        style="bg-indigo-700 hover:bg-indigo-500 mt-3" 
+                                        label="Login"/>
+                                    
+                                <span 
+                                    onClick={() => setNewUserStates(true)} 
+                                    className="block text-sm text-indigo-600 hover:underline mt-4 cursor-pointer"
+                                >
+                                    Não tem conta? Cadastre-se aqui
+                                </span>
                             </RendeIf>
                         </div>
                     </form>
