@@ -7,9 +7,11 @@ import { Button } from "@/componente/button/Button";
 import { LoginForm, formScheme, validationScheme } from "@/componente/login/formScheme";
 import { Credencial, TokenAcesso } from "@/resources/user/user.resources";
 import { userAuth } from "@/resources/user/authenticatio.user";
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage(){
     const auth = userAuth();
+    const router = useRouter();
     const [newUserStates, setNewUserStates] = useState<boolean> (false);
     const {values, handleChange, handleSubmit, errors, resetForm} = useFormik<LoginForm>({
         initialValues:{
@@ -26,7 +28,8 @@ export default function LoginPage(){
         try{
             const acesso: TokenAcesso = await auth.userAuthentication(credencial);
             auth.initSession(acesso);
-            console.log("Chegando na parte de token");
+            router.push("/restaurante");
+            console.log("Chegando no restaurante");
         }catch(error: any){
             console.log("erro")
         }

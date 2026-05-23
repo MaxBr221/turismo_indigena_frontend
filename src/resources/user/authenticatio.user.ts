@@ -36,8 +36,10 @@ class UserAuth{
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             }
+        
 
         });
+        console.log("chegando na função de registro");
         if(response.status == 409){
             const responseErro = await response.json();
             throw new Error(responseErro.error);
