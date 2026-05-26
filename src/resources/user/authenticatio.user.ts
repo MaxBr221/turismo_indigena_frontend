@@ -47,14 +47,14 @@ class UserAuth{
     }
     initSession(token: TokenAcesso){
         console.log("TOKEN RECEBIDO:", token);
-        if(token.tokenAcesso){
-            const decodeToken: any = jwtDecode (token.tokenAcesso);
+        if(token.token){
+            const decodeToken: any = jwtDecode (token.token);
             console.log("TOKEN DECODADO:", decodeToken);
 
             const userSessionToken: UsuarioSessaoToken = {
                 nome: decodeToken.name,
                 login: decodeToken.sub,
-                token: token.tokenAcesso,
+                token: token.token,
                 expiracao: decodeToken.exp
             }
             console.log("SESSÃO SALVA:", userSessionToken);
@@ -72,11 +72,16 @@ class UserAuth{
         try{
             const sessaoUser = localStorage.getItem(UserAuth.AUTH_PARAM);
             if(!sessaoUser){
+                console.log("token do getSessio: ", sessaoUser);
                 return null;
+
+                
             }
             const token:UsuarioSessaoToken = JSON.parse(sessaoUser);
+            console.log("token do getSessio: ", token);
             return token;
         }catch(error){
+            console.error("Erro ao buscar token: ", error);
             return null;
         }
     }

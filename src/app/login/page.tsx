@@ -19,6 +19,7 @@ export default function LoginPage(){
             senha: ''
 
         },
+
         onSubmit: onSubmit
     })
 
@@ -28,10 +29,11 @@ export default function LoginPage(){
         try{
             const acesso: TokenAcesso = await auth.userAuthentication(credencial);
             auth.initSession(acesso);
-            router.push("/restaurante");
+            router.push("/painel");
             console.log("Chegando no restaurante");
         }catch(error: any){
-            console.log("erro")
+            console.log("erro");
+            console.log("erro no tokeeen");
         }
              
     }
