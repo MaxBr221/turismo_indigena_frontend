@@ -9,7 +9,7 @@ class AuthRestaurante{
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
-                    "content-type": "application/json",
+                    "Content-Type": "application/json",
                     "Accept": "application/json"
 
                 }
