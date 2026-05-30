@@ -1,4 +1,5 @@
 export class Restaurante{
+    id?: number;
     nome?: string;
     descricao?: string;
     localizacao?: string;

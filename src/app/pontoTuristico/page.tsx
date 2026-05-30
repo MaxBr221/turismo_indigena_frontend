@@ -12,7 +12,7 @@ export default function PontoPage(){
     
 
     async function buscarPontoTuristico() {
-        const response = pontoService.buscar(query, local);
+        const pontos = pontoService.buscar(query, local);
 
     }
 
