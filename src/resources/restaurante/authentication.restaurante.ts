@@ -1,7 +1,7 @@
 import { Restaurante } from "./restaurante.resource";
 
 class AuthRestaurante{
-    baseUrl: string = 'http://localhost:8081/restaurantes/busca';
+    baseUrl: string = 'http://localhost:8081/restaurantes/restaurantePaginacao';
 
     async busca(query: string = "", local: string = ""): Promise<Restaurante[]> {
         try{

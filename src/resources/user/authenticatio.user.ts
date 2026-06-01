@@ -72,7 +72,7 @@ class UserAuth{
         try{
             const sessaoUser = localStorage.getItem(UserAuth.AUTH_PARAM);
             if(!sessaoUser){
-                console.log("token do getSessio: ", sessaoUser);
+                console.log("token do getSessioNull: ", sessaoUser);
                 return null;
 
                 

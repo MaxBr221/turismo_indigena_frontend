@@ -7,9 +7,6 @@ import { restaurantes } from '@/resources/restaurante/authentication.restaurante
 import { Formik, useFormik } from 'formik';
 import { Restaurante } from '@/resources/restaurante/restaurante.resource';
 
-
-
-
 export default function RestaurantePage(){
     const restauranteService = restaurantes();
     const [query, setQuery] = useState<string>('');
@@ -20,7 +17,8 @@ export default function RestaurantePage(){
         async function buscarRestaurante(){
             try{
                 const getRestaurantes = await restauranteService.busca(query, local)
-                setRestaurante(getRestaurantes);
+                console.log(getRestaurantes, "restaurantes");
+                setRestaurante((getRestaurantes as any).content || []);
 
             }catch(error){
                 console.error("Erro ao buscarRestaurantes: ", error);
@@ -37,11 +35,11 @@ export default function RestaurantePage(){
                 <div className="col-span-3 text-gray-400 py-8 text-center w-full">
                     Nenhum Restaurante Encontrado!
                 </div>
-            )
-        }
-        return restaurante.map((rest: Restaurante) =>{
+            );
+        };
+        return restaurante?.map((rest: Restaurante) =>{
             return(
-                    <div key={rest.id} className="bg-gray-800 border border-gray-700 rounded-xl p-5 shadow-lg flex flex-col justify-between hover:border-orange-500 transition-all duration-200"
+                    <div key={rest.id} className="bg-gray-800 w-60 border border-gray-700 rounded-xl p-2 shadow-lg flex flex-col justify-between hover:border-green-500 transition-all duration-200"
                     >
             
                     <div>
@@ -68,32 +66,26 @@ export default function RestaurantePage(){
     
     return(
         <Template>
-            <div className="min-h-screen w-full text-center mt-4">
+            <div className="w-full text-center mt-4">
                 <div className="mt-6 py-3">
-                    <h2 className="font-bold">Restaurantes</h2>
+                    <h2 className="font-bold ">Restaurantes</h2>
                 </div>
 
-                <div className="flex flex-col md:flex-row items-center justify-center gap-3 mt-4 py-4 bg-gray-900/50 p-6 rounded-xl">
+                <div className="gap-3 mt-4 py-4 bg-gray-900/50 p-6 rounded-xl">
                 
-                    <section>
-                        <div className="mt-2 py-4 mr-6">
-                            <InputText placeholder="Digite o nome do Restaurante" onChange={event => setQuery(event.target.value)}/>
-                        </div>
+                    <section className="flex justify-center items-center gap-2 mt-2 py-4">
+                        <InputText placeholder="Digite o nome do Restaurante" onChange={event => setQuery(event.target.value)}/>
 
-                    
-                        <div>
-                            <InputText placeholder="Escolha o Local" onChange={event => setLocal(event.target.value)}/>
-
-                            <select className="border px-4 py-2 rounded-lg text-gray-900">
-                                <option>PRAIA</option>
-                                <option>RIO</option>
-                                <option>CENTRO</option>
-                                <option>ALDEIA</option>
-                            </select>
-                            <Button type='button'
-                                    label='search'
-                                    style='bg-blue-500 hover:bg-blue-300'/>
-                        </div>
+                        <select className="border px-4 py-2 rounded-lg text-gray-900"
+                                value={local} onChange={event => setLocal(event.target.value)}>
+                            <option>PRAIA</option>
+                            <option>RIO</option>
+                            <option>CENTRO</option>
+                            <option>ALDEIA</option>
+                        </select>
+                        <Button type='button'
+                                label='Pesquisar'
+                                style='bg-blue-500 hover:bg-blue-300'/>
 
                     </section>
                   
