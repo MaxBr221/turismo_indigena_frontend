@@ -21,7 +21,8 @@ class UserAuth{
             }
         
         });
-        if(response.status == 401){
+
+        if(response.status === 200){
             console.error("Senha incorreta.");
         }
         return await response.json();

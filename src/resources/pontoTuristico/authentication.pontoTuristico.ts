@@ -1,9 +1,9 @@
 import { PontoTuristico } from "./pontoTuristico";
 
 class AuthenticationPonto{
-    baseUrl: string = 'http://localhost:8081/pontoTuristico/busca';
+    baseUrl: string = 'http://localhost:8081/pontoTuristico/pontos';
 
-    async buscar (query: string, local: string): Promise<PontoTuristico[]>{
+    async buscar (query: string = "", local: string = ""): Promise<PontoTuristico[]>{
         try{
             const url = `${this.baseUrl}?query=${query}&local=${local}`
             const response = await fetch(url,{

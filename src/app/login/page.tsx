@@ -28,12 +28,16 @@ export default function LoginPage(){
         const credencial: Credencial = {login: values.login, senha: values.senha};
         try{
             const acesso: TokenAcesso = await auth.userAuthentication(credencial);
+            if (!acesso || !acesso.token) {
+                throw new Error("Senha incorreta ou falha na autenticação!");
+            }
             auth.initSession(acesso);
+            console.log(acesso)
             router.push("/painel");
-            console.log("Chegando no restaurante");
+            console.log("Chegando no Painel");
         }catch(error: any){
-            console.log("erro");
-            console.log("erro no tokeeen");
+            console.error("erro no tokeeen");
+            alert(error.message || "user ou senha errada");
         }
              
     }

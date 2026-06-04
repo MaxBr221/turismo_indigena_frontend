@@ -37,9 +37,9 @@ export default function RestaurantePage(){
                 </div>
             );
         };
-        return restaurante?.map((rest: Restaurante) =>{
+        return restaurante?.map((rest: Restaurante, index: number) =>{
             return(
-                    <div key={rest.id} className="bg-gray-800 w-60 border border-gray-700 rounded-xl p-2 shadow-lg flex flex-col justify-between hover:border-green-500 transition-all duration-200"
+                    <div key={rest.id || index} className="bg-gray-800 w-60 border border-gray-700 rounded-xl p-2 shadow-lg flex flex-col justify-between hover:border-green-500 transition-all duration-200"
                     >
             
                     <div>
