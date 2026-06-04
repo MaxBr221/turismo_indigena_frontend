@@ -1,4 +1,5 @@
 export class PontoTuristico{
+    id?: number
     nome?: string;
     local?: string;
     informacoes?: string;

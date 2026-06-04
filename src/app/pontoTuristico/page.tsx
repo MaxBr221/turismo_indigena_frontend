@@ -3,19 +3,29 @@ import { Button } from "@/componente/button/Button";
 import { InputText } from "@/componente/input/InputText";
 import { Template } from "@/componente/Template";
 import { pontoTuristico } from "@/resources/pontoTuristico/authentication.pontoTuristico";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function PontoPage(){
     const pontoService = pontoTuristico();
     const [query, setQuery] = useState<string>('');
     const [local, setLocal] = useState<string>('');
+    const [pontoTuristico, setPontoTuristico] = useState<an
     
+    useEffect(() => {
+         async function buscarPontoTuristico() {
+            try{
+                const pontos = pontoService.buscar(query, local);
 
-    async function buscarPontoTuristico() {
-        const pontos = pontoService.buscar(query, local);
 
-    }
+            }catch(error){
+                console.log(error)
+            }
 
+        }
+
+    }, [query, local])
+
+       
 
 
     return(
