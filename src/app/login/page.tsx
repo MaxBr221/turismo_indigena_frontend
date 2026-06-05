@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useFormik } from "formik";
 import { Button } from "@/componente/button/Button";
 import { LoginForm, formScheme, validationScheme } from "@/componente/login/formScheme";
-import { Credencial, TokenAcesso } from "@/resources/user/user.resources";
+import { Credencial, TokenAcesso, Usuario } from "@/resources/user/user.resources";
 import { userAuth } from "@/resources/user/authenticatio.user";
 import { useRouter } from 'next/navigation';
 
@@ -25,19 +25,31 @@ export default function LoginPage(){
 
     async function onSubmit(values: LoginForm) {
         console.log(values);
-        const credencial: Credencial = {login: values.login, senha: values.senha};
-        try{
-            const acesso: TokenAcesso = await auth.userAuthentication(credencial);
-            if (!acesso || !acesso.token) {
-                throw new Error("Senha incorreta ou falha na autenticação!");
+        if(!newUserStates){
+            const credencial: Credencial = {login: values.login, senha: values.senha};
+            try{
+                const acesso: TokenAcesso = await auth.userAuthentication(credencial);
+                if (!acesso || !acesso.token) {
+                    throw new Error("Senha incorreta ou falha na autenticação!");
+                }
+                auth.initSession(acesso);
+                router.push("/painel");
+                console.log("Chegando no Painel");
+            }catch(error: any){
+                console.error("erro ao logar");
+                alert(error.message || "user ou senha errada");
             }
-            auth.initSession(acesso);
-            console.log(acesso)
-            router.push("/painel");
-            console.log("Chegando no Painel");
-        }catch(error: any){
-            console.error("erro no tokeeen");
-            alert(error.message || "user ou senha errada");
+        }else{
+            const newUser: Usuario = {login: values.login, senha: values.senha, nome: values.nome, telefone: values.telefone};
+            console.log("nome", newUser.nome, newUser.telefone);
+            try{
+                auth.save(newUser);
+                console.log("Salvando novo Usuário!", newUser.nome);
+                resetForm();
+                setNewUserStates(false);
+            }catch(error){
+                throw new Error("Erro ao salvar Usuário!");
+            }
         }
              
     }
@@ -59,8 +71,10 @@ export default function LoginPage(){
                             </div>
                             <div className="mt-2">
                                 <InputText className="w-full"
-                                            id="name"
-                                            name="name"
+                                            id="nome"
+                                            name="nome"
+                                            value={values.nome}
+                                            onChange={handleChange}
                                             placeholder="Digite seu Nome"/>
                             </div>
 
@@ -73,8 +87,10 @@ export default function LoginPage(){
 
                             <div className="mt-2">
                                 <InputText className="w-full"
-                                            id="number"
-                                            name="number"
+                                            id="telefone"
+                                            name="telefone"
+                                            value={values.telefone}
+                                            onChange={handleChange}
                                             placeholder="Digite seu Número"/>
                             </div>
 
@@ -114,6 +130,8 @@ export default function LoginPage(){
                                         id="confirmarSenha"
                                         name="confirmarSenha"
                                         type="password"
+                                        value={values.confirmarSenha}
+                                        onChange={handleChange}
                                         placeholder="Confirme sua Senha"/>
                             </div>
 

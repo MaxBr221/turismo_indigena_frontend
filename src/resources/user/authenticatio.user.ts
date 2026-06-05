@@ -7,7 +7,7 @@ import { jwtDecode } from "jwt-decode";
 
 class UserAuth{
     baseString: string = "http://localhost:8081/auth";
-    static AUTH_PARAM: string = "auth";
+    static AUTH_PARAM: string = "_auth";
 
      async userAuthentication(credencial: Credencial): Promise<TokenAcesso>{
        
@@ -22,10 +22,18 @@ class UserAuth{
         
         });
 
-        if(response.status === 200){
-            console.error("Senha incorreta.");
+        if (!response.ok) {
+            const dadosErro = await response.json();
+            throw new Error(dadosErro.message || "Usuário ou senha incorretos!");
         }
-        return await response.json();
+
+        const dadosUser = await response.json();
+
+        if (!dadosUser || !dadosUser.token) {
+            throw new Error(dadosUser.message || "Credenciais inválidas ou token ausente.");
+        }
+
+        return dadosUser as TokenAcesso;
     }
     
     async save(user: Usuario): Promise<void>{
