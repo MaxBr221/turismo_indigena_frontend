@@ -8,6 +8,7 @@ import { LoginForm, formScheme, validationScheme } from "@/componente/login/form
 import { Credencial, TokenAcesso, Usuario } from "@/resources/user/user.resources";
 import { userAuth } from "@/resources/user/authenticatio.user";
 import { useRouter } from 'next/navigation';
+import { FieldError } from "@/componente/FieldError";
 
 export default function LoginPage(){
     const auth = userAuth();
@@ -19,7 +20,7 @@ export default function LoginPage(){
             senha: ''
 
         },
-
+        validationSchema: validationScheme,
         onSubmit: onSubmit
     })
 
@@ -56,14 +57,14 @@ export default function LoginPage(){
     return(
         
         <Template>
-            <div className="w-full text-center mt-4">
-                <div className="mt-2 py-3">
+            <div className="w-full text-center mt-3">
+                <div className="py-3">
                     <h2 className="font-bold text-xl">
                         {newUserStates ? 'Cadastro' : 'Faça Login com sua Conta'}
                     </h2>
                 </div>
 
-                <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                <div className="mt- sm:mx-auto sm:w-full sm:max-w-sm">
                     <form onSubmit={handleSubmit} className="space-y-2">
                         <RendeIf condition={newUserStates}>
                             <div className="flex items-center gap-4">
@@ -76,6 +77,7 @@ export default function LoginPage(){
                                             value={values.nome}
                                             onChange={handleChange}
                                             placeholder="Digite seu Nome"/>
+                                    <FieldError error={errors.nome}/> 
                             </div>
 
                         </RendeIf>
@@ -92,6 +94,7 @@ export default function LoginPage(){
                                             value={values.telefone}
                                             onChange={handleChange}
                                             placeholder="Digite seu Número"/>
+                                        <FieldError error={errors.telefone}/>
                             </div>
 
                         </RendeIf>
@@ -106,6 +109,7 @@ export default function LoginPage(){
                                         value={values.login}
                                         onChange={handleChange}
                                         placeholder="Digite seu Email"/>
+                                    <FieldError error={errors.login}/>
                         </div>
 
                         <div className="flex items-center gap-4">
@@ -120,6 +124,7 @@ export default function LoginPage(){
                                         value={values.senha}
                                         onChange={handleChange}
                                         placeholder="Digite sua Senha"/>
+                                    <FieldError error={errors.senha}/>
                         </div>
                         <RendeIf condition={newUserStates}>
                             <div className="flex items-center gap-4">
@@ -133,6 +138,7 @@ export default function LoginPage(){
                                         value={values.confirmarSenha}
                                         onChange={handleChange}
                                         placeholder="Confirme sua Senha"/>
+                                    <FieldError error={errors.confirmarSenha}/>
                             </div>
 
 

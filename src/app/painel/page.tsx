@@ -34,14 +34,21 @@ export default function painelPage(){
             id: 'restaurante',
             titulo: 'Restaurante',
             rota: '/restaurante',
-            corEstilo: 'border-orange-500 hover:bg-orange-50 text-orange-700 hover:scale-105',
+            corEstilo: 'border-blue-500 hover:bg-green-50 text-orange-700 hover:scale-100',
             icone: <span className="text-4xl">🍽️</span>
         },
         {
             id: 'pontoTuristico',
             titulo: 'Ponto Turistico',
             rota: '/pontoTuristico',
-            corEstilo: 'border-orange-500 hover:bg-orange-50 text-orange-700 hover:scale-105',
+            corEstilo: 'border-blue-500 hover:bg-green-50 text-orange-700 hover:scale-100',
+            icone: <span className="text-4xl">🍽️</span>
+        },
+        {
+            id: 'guia',
+            titulo: 'Guias Turistico',
+            rota: '/guia',
+            corEstilo: 'border-blue-500 hover:bg-green-50 text-orange-700 hover:scale-100',
             icone: <span className="text-4xl">🍽️</span>
         }
 
@@ -50,17 +57,17 @@ export default function painelPage(){
     return (
         <Template>
             <div>
-                <div className="mt-2 py-3 ">
+                <div className="mt-2 py-3 text-center">
                     <h2 className="font-bold lg-roudend">Painel Principal</h2>
                 </div>
-                <p>Selecione uma opção</p>
+                <p className="text-center mt-2  ">Selecione uma opção</p>
 
-                <div>
+                <div className="flex flex-col justify-center items-center gap-3 mt-10 w-full">
                     {itensMenu.map((item) => (
                         <div
                             key={item.id}
                             onClick={() => router.push(item.rota)}
-                            className={`cursor-pointer p-8 bg-white rounded-2xl border-2 shadow-sm transition-all duration-300 transform flex flex-col items-center justify-center text-center h-48 ${item.corEstilo}`}
+                            className={`cursor-pointer p-8 bg-white rounded-2xl border-2 shadow-sm transition-all duration-300 transform flex flex-col items-center justify-center text-center h-30 w-60 ${item.corEstilo}`}
                         >
                             <div className="mb-4">{item.icone}</div>
                             <h2 className="text-2xl font-bold tracking-tight">{item.titulo}</h2>

@@ -66,7 +66,7 @@ export default function PontoPage(){
                     <h2 className="font-bold ">Pontos Turisticos</h2>
                 </div>
 
-                <div className="gap-3 mt-4 py-4 bg-gray-900/50 p-6 rounded-xl">
+                <div className="gap-3 mt-4 py-4 p-6 rounded-xl">
                     <section className="flex justify-center items-center gap-2 mt-2 py-4">
                         <InputText placeholder="Digite o Ponto Turistico" onChange={event => setQuery(event.target.value)}/>
 
