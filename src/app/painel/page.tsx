@@ -60,7 +60,7 @@ export default function painelPage(){
                 <div className="mt-2 py-3 text-center">
                     <h2 className="font-bold lg-roudend">Painel Principal</h2>
                 </div>
-                <p className="text-center mt-2  ">Selecione uma opção</p>
+                <p className="text-center mt-2 ">Selecione uma opção</p>
 
                 <div className="flex flex-col justify-center items-center gap-3 mt-10 w-full">
                     {itensMenu.map((item) => (

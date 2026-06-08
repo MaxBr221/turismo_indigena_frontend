@@ -48,8 +48,7 @@ class UserAuth{
         
 
         });
-        console.log("chegando na função de registro");
-        if(response.status == 409){
+        if(!response.ok || response.status != 202){
             const responseErro = await response.json();
             throw new Error(responseErro.error);
         }

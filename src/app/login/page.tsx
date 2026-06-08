@@ -42,9 +42,8 @@ export default function LoginPage(){
             }
         }else{
             const newUser: Usuario = {login: values.login, senha: values.senha, nome: values.nome, telefone: values.telefone};
-            console.log("nome", newUser.nome, newUser.telefone);
             try{
-                auth.save(newUser);
+                await auth.save(newUser);
                 console.log("Salvando novo Usuário!", newUser.nome);
                 resetForm();
                 setNewUserStates(false);
@@ -54,8 +53,7 @@ export default function LoginPage(){
         }
              
     }
-    return(
-        
+    return(     
         <Template>
             <div className="w-full text-center mt-3">
                 <div className="py-3">
