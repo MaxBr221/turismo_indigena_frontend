@@ -9,6 +9,7 @@ import { Credencial, TokenAcesso, Usuario } from "@/resources/user/user.resource
 import { userAuth } from "@/resources/user/authenticatio.user";
 import { useRouter } from 'next/navigation';
 import { FieldError } from "@/componente/FieldError";
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 export default function LoginPage(){
     const auth = userAuth();
@@ -52,6 +53,23 @@ export default function LoginPage(){
             }
         }
              
+    }
+    async function handleLoginGoogleSucesso(credentialResponse: any) {
+        try {
+            console.log("Token criptografado enviado pelo Google:", credentialResponse.credential);
+            
+            // 1. Envia o token obtido para o método que você criou no seu UserAuth
+            const acesso = await auth.loginComGoogle(credentialResponse.credential);
+            
+            // 2. Se o Java validar e devolver seu JWT, inicia a sessão e redireciona
+            auth.initSession(acesso);
+            router.push("/painel");
+            console.log("Logado com Google com sucesso!");
+            
+        } catch (error: any) {
+            console.error("Erro no login com Google:", error);
+            alert(error.message || "Falha ao autenticar com a conta Google.");
+        }
     }
     return(     
         <Template>
@@ -170,10 +188,25 @@ export default function LoginPage(){
                                     Não tem conta? Cadastre-se aqui
                                 </span>
                             </RendeIf>
+
+                            <RendeIf condition={!newUserStates}>
+                                <div className="mt-4 flex justify-center">
+                                    <GoogleOAuthProvider clientId="299016155532-2ni3ks08l2lrraugdn1delclh1cru4bc.apps.googleusercontent.com">
+                                        <GoogleLogin
+                                            onSuccess={handleLoginGoogleSucesso}
+                                            onError={() => alert("Falha na comunicação com o Google")}
+                                            theme="filled_blue"
+                                            shape="pill"
+                                            text="signin_with"
+                                        />
+                                    </GoogleOAuthProvider>
+                                </div>                                
+                            </RendeIf>
                         </div>
                     </form>
                 </div>
             </div>
         </Template>
+        
     )
 }

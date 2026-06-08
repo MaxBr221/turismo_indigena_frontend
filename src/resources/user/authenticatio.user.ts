@@ -93,7 +93,43 @@ class UserAuth{
             return null;
         }
     }
+    async loginComGoogle(gogleToken: string | undefined): Promise<TokenAcesso>{
+        if(!gogleToken){
+            throw new Error("Token do google deu erro");
+        }
+
+        const response = await fetch(this.baseString + "/google",{
+            method: 'POST',
+            body: JSON.stringify({token: gogleToken}),
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        });
+        console.log("Conectou com o metodo");
+
+        if(!response.ok){
+            let mensagemErro = "Falha ao autenticar com a conta Google.";
+            try {
+                const textoResposta = await response.text();
+                if (textoResposta.startsWith('{')) {
+                    const objetoErro = JSON.parse(textoResposta);
+                    mensagemErro = objetoErro.message || objetoErro.error || mensagemErro;
+                } else if (textoResposta && textoResposta.length < 100) {
+                    mensagemErro = textoResposta;
+                }
+            } catch (e) {
+                console.error("Não foi possível ler o erro do Google:", e);
+            }
+            throw new Error(mensagemErro);    
+        }
+        const dadosUser = await response.json();
+
+        if (!dadosUser || !dadosUser.token) {
+        throw new Error("Credenciais do Google válidas, mas falha ao gerar sessão interna.");
+    }
+    return dadosUser as TokenAcesso;
 }
-   
+}
 export const userAuth = () => new UserAuth;
         
