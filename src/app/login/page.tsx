@@ -57,11 +57,7 @@ export default function LoginPage(){
     async function handleLoginGoogleSucesso(credentialResponse: any) {
         try {
             console.log("Token criptografado enviado pelo Google:", credentialResponse.credential);
-            
-            // 1. Envia o token obtido para o método que você criou no seu UserAuth
             const acesso = await auth.loginComGoogle(credentialResponse.credential);
-            
-            // 2. Se o Java validar e devolver seu JWT, inicia a sessão e redireciona
             auth.initSession(acesso);
             router.push("/painel");
             console.log("Logado com Google com sucesso!");
