@@ -4,15 +4,27 @@ import { InputText } from "@/componente/input/InputText";
 import { Template } from "@/componente/Template";
 import { pontoTuristico } from "@/resources/pontoTuristico/authentication.pontoTuristico";
 import { PontoTuristico } from "@/resources/pontoTuristico/pontoTuristico";
+import { userAuth } from "@/resources/user/authenticatio.user";  
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from 'react';
 
 export default function PontoPage(){
     const pontoService = pontoTuristico();
+    const auth = userAuth();
     const [query, setQuery] = useState<string>('');
     const [local, setLocal] = useState<string>('');
     const [listaPonto, setListaPonto] = useState<any[]>([]);
+    const [carregandoSeguranca, setCarregandoSeguranca] = useState<boolean>(true); 
+    const router = useRouter();
     
     useEffect(() => {
+        const sessaoAtiva = auth.getUserSession();
+        if (!sessaoAtiva) {
+            console.log("Acesso negado no componente! Redirecionando para o login...");
+            router.push("/login");
+            return;
+        }
+        setCarregandoSeguranca(false);
          async function buscarPontoTuristico() {
             try{
                 const pontos = await pontoService.buscar(query, local);
@@ -25,6 +37,14 @@ export default function PontoPage(){
         }buscarPontoTuristico();
 
     }, [query, local])
+
+    if (carregandoSeguranca) {
+        return (
+            <div className="w-full h-screen bg-gray-900 flex items-center justify-center text-white font-semibold">
+                Verificando credenciais de acesso...
+            </div>
+        );
+    }
 
 
     function renderizarTelaPonto(){

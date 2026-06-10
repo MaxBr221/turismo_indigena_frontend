@@ -6,14 +6,27 @@ import { useEffect, useState } from 'react';
 import { restaurantes } from '@/resources/restaurante/authentication.restaurante';
 import { Formik, useFormik } from 'formik';
 import { Restaurante } from '@/resources/restaurante/restaurante.resource';
+import { userAuth } from '@/resources/user/authenticatio.user';
+import { useRouter } from "next/navigation";
 
 export default function RestaurantePage(){
     const restauranteService = restaurantes();
+    const router = useRouter();
+    const auth = userAuth();
     const [query, setQuery] = useState<string>('');
     const [local, setLocal] = useState<string>('');
     const [restaurante, setRestaurante] = useState<any[]>([]);
+    const [carregandoSeguranca, setCarregandoSeguranca] = useState<boolean>(true); 
+
 
     useEffect(() => {
+        const sessaoAtiva = auth.getUserSession();
+        if(!sessaoAtiva){
+            console.log("Token invalido, redirecionando para login");
+            router.push("/login");
+            return;
+        }
+        setCarregandoSeguranca(false);
         async function buscarRestaurante(){
             try{
                 const getRestaurantes = await restauranteService.busca(query, local)
@@ -27,6 +40,13 @@ export default function RestaurantePage(){
         }buscarRestaurante();
 
     }, [query, local]);
+    if(carregandoSeguranca){
+        return(
+            <div className="w-full h-screen bg-gray-900 flex items-center justify-center text-white font-semibold">
+                Verificando credenciais de acesso...
+            </div>
+        )
+    }
 
     
     function renderizarRestaurantes(){

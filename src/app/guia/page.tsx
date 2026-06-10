@@ -5,16 +5,30 @@ import { authGuia } from "@/resources/guia/authentication.guia";
 import { Guia } from "@/resources/guia/guia.resources";
 import { useEffect, useState } from "react";
 import { Button } from "@/componente/button/Button";
+import { userAuth } from "@/resources/user/authenticatio.user"; 
+import { useRouter } from "next/navigation";
 
 
 
 export default function guiaPage(){
     const [query, setQuery] = useState<string>("");
     const [local, setLocal] = useState<string>("");
-    const auth = authGuia();
     const [guia, setGuia] = useState<any[]>([]);
+    const [carregandoSeguranca, setCarregandoSeguranca] = useState<boolean>(true); 
+    const auth = authGuia();
+    const authUser = userAuth();
+    const router = useRouter();
 
     useEffect(() => {
+        const sessaoAtiva = authUser.getUserSession();
+
+         if (!sessaoAtiva) {
+            console.log("Acesso negado no componente! Redirecionando para o login...");
+            router.push("/login");
+            return;
+        }
+        setCarregandoSeguranca(false);
+
         async function buscarGuia(){
             try{
                 const guias = await auth.buscarGuia();
@@ -26,6 +40,13 @@ export default function guiaPage(){
             }
         }buscarGuia();
     })
+    if(carregandoSeguranca){
+        return(
+            <div className="w-full h-screen bg-gray-900 flex items-center justify-center text-white font-semibold">
+                Verificando credenciais de acesso...
+            </div>
+        )
+    }
 
     function renderizarTelaGuia(){
         if(guia.length === 0){

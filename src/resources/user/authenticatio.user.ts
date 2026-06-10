@@ -1,7 +1,7 @@
 import { TokenAcesso, Usuario, Credencial, UsuarioSessaoToken } from "@/resources/user/user.resources"
-import { use } from "react";
 import { string } from "yup";
 import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie"; 
 
 
 
@@ -66,13 +66,13 @@ class UserAuth{
                 expiracao: decodeToken.exp
             }
             console.log("SESSÃO SALVA:", userSessionToken);
-            this.setUserSession(userSessionToken)
+            this.setUserSession(userSessionToken);
         }
     } 
     setUserSession(userSessionToken: UsuarioSessaoToken){
         try{
             localStorage.setItem(UserAuth.AUTH_PARAM, JSON.stringify(userSessionToken));
-
+            Cookies.set("token", userSessionToken.token!, { expires: 1, path: '/' });
         }catch(error){}
 
     }
@@ -91,6 +91,15 @@ class UserAuth{
         }catch(error){
             console.error("Erro ao buscar token: ", error);
             return null;
+        }
+    }
+    logout() {
+        try {
+            localStorage.removeItem(UserAuth.AUTH_PARAM);
+            Cookies.remove("token", { path: '/' });
+            console.log("Sessão encerrada com sucesso.");
+        } catch (error) {
+            console.error("Erro ao efetuar logout:", error);
         }
     }
     async loginComGoogle(gogleToken: string | undefined): Promise<TokenAcesso>{

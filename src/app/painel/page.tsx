@@ -5,13 +5,19 @@ import { CardMenu } from "@/resources/painel/painel.resources";
 import { useRouter } from 'next/navigation'
 import { Template } from "@/componente/Template";
 
-
-export default function painelPage(){
+export default function PainelPage(){
     const auth = userAuth();
     const router = useRouter();
     const [carregadoSessao, setCarregandoSessao] = useState(true);
 
     useEffect(() => {
+        const sessaoAtiva = auth.getUserSession();
+        if(!sessaoAtiva){
+            console.log("Token inválido, redirecionando para tela de login..");
+            router.push("/login");
+            return;
+        }
+        setCarregandoSessao(false);
         try{
             const sessaoAtiva = auth.getUserSession();
             console.log("token: ", sessaoAtiva);
@@ -28,6 +34,14 @@ export default function painelPage(){
             console.error("Erro ao entrar no painel")
         } 
     },[auth, router]);
+
+    if (carregadoSessao) {
+        return (
+            <div className="w-full h-screen bg-gray-900 flex items-center justify-center text-white font-semibold">
+                Verificando credenciais de acesso...
+            </div>
+        );
+    }
     
     const itensMenu: CardMenu[] = [
         {
