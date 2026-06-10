@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { CardMenu } from "@/resources/painel/painel.resources";
 import { useRouter } from 'next/navigation'
 import { Template } from "@/componente/Template";
+import { Button } from "@/componente/button/Button";
 
 export default function PainelPage(){
     const auth = userAuth();
@@ -75,7 +76,6 @@ export default function PainelPage(){
                     <h2 className="font-bold lg-roudend">Painel Principal</h2>
                 </div>
                 <p className="text-center mt-2 ">Selecione uma opção</p>
-
                 <div className="flex flex-col justify-center items-center gap-3 mt-10 w-full">
                     {itensMenu.map((item) => (
                         <div

@@ -4,6 +4,7 @@ export const Footer: React.FC = () =>{
             <div className="container mx-auto text-center font-bold">
                 @turismo_indigena
             </div>
+             
         </footer>
 
 
