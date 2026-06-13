@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 export default function guiaPage(){
     const [query, setQuery] = useState<string>("");
     const [local, setLocal] = useState<string>("");
-    const [guia, setGuia] = useState<any[]>([]);
+    const [guia, setGuia] = useState<any>([]);
     const [carregandoSeguranca, setCarregandoSeguranca] = useState<boolean>(true); 
     const auth = authGuia();
     const authUser = userAuth();
@@ -33,13 +33,13 @@ export default function guiaPage(){
             try{
                 const guias = await auth.buscarGuia();
                 console.log("guias:", guias);
-                setGuia((guias as any).content || []);
+                setGuia(guias || []);
 
             }catch(error){
                 throw new Error("erro ao buscar guias");
             }
         }buscarGuia();
-    })
+    },[])
     if(carregandoSeguranca){
         return(
             <div className="w-full h-screen bg-gray-900 flex items-center justify-center text-white font-semibold">
