@@ -10,9 +10,11 @@ import { userAuth } from "@/resources/user/authenticatio.user";
 import { useRouter } from 'next/navigation';
 import { FieldError } from "@/componente/FieldError";
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import { userNotification } from "@/componente/notification";
 
 export default function LoginPage(){
     const auth = userAuth();
+    const notify = userNotification();
     const router = useRouter();
     const [newUserStates, setNewUserStates] = useState<boolean> (false);
     const {values, handleChange, handleSubmit, errors, resetForm} = useFormik<LoginForm>({
@@ -32,14 +34,15 @@ export default function LoginPage(){
             try{
                 const acesso: TokenAcesso = await auth.userAuthentication(credencial);
                 if (!acesso || !acesso.token) {
+                    notify.notify("Senha incorretaaaaa!", "warning");
                     throw new Error("Senha incorreta ou falha na autenticação!");
                 }
                 auth.initSession(acesso);
                 router.push("/painel");
                 console.log("Chegando no Painel");
             }catch(error: any){
+                notify.notify('Erro ao fazer login', 'error')
                 console.error("erro ao logar");
-                alert(error.message || "user ou senha errada");
             }
         }else{
             const newUser: Usuario = {login: values.login, senha: values.senha, nome: values.nome, telefone: values.telefone};
@@ -47,9 +50,11 @@ export default function LoginPage(){
                 await auth.save(newUser);
                 console.log("Salvando novo Usuário!", newUser.nome);
                 resetForm();
+                notify.notify("Usuário salvo com sucesso!", "success");
                 setNewUserStates(false);
             }catch(error){
-                throw new Error("Erro ao salvar Usuário!");
+                notify.notify("Usuário já existente", "error");
+                throw new Error(`Erro ao salvar usuário: ${(error as Error).message}`);
             }
         }
              

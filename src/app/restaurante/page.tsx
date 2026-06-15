@@ -8,8 +8,10 @@ import { Formik, useFormik } from 'formik';
 import { Restaurante } from '@/resources/restaurante/restaurante.resource';
 import { userAuth } from '@/resources/user/authenticatio.user';
 import { useRouter } from "next/navigation";
+import { userNotification } from "@/componente/notification";
 
 export default function RestaurantePage(){
+    const notification = userNotification();
     const restauranteService = restaurantes();
     const router = useRouter();
     const auth = userAuth();
@@ -31,7 +33,11 @@ export default function RestaurantePage(){
             try{
                 const getRestaurantes = await restauranteService.busca(query, local)
                 console.log(getRestaurantes, "restaurantes");
-                setRestaurante((getRestaurantes as any).content || []);
+                const lista = ((getRestaurantes as any).content || []);
+                setRestaurante(lista);
+                if(lista.length === 0){
+                    notification.notify('Nenhum Restaurante encontrado!','info');
+                }
 
             }catch(error){
                 console.error("Erro ao buscarRestaurantes: ", error);
@@ -51,11 +57,7 @@ export default function RestaurantePage(){
     
     function renderizarRestaurantes(){
         if(restaurante.length === 0){
-            return(
-                <div className="col-span-3 text-gray-400 py-8 text-center w-full">
-                    Nenhum Restaurante Encontrado!
-                </div>
-            );
+            return <p className="text-gray-400 text-center col-span-full">Nenhum restaurante disponível nesta região.</p>;
         };
         return restaurante?.map((rest: Restaurante, index: number) =>{
             return(

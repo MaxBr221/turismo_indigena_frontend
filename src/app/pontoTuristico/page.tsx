@@ -7,8 +7,10 @@ import { PontoTuristico } from "@/resources/pontoTuristico/pontoTuristico";
 import { userAuth } from "@/resources/user/authenticatio.user";  
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from 'react';
+import { userNotification } from "@/componente/notification";
 
 export default function PontoPage(){
+    const notification = userNotification();
     const pontoService = pontoTuristico();
     const auth = userAuth();
     const [query, setQuery] = useState<string>('');
@@ -29,7 +31,11 @@ export default function PontoPage(){
             try{
                 const pontos = await pontoService.buscar(query, local);
                 console.log(pontos, "Pontos");
-                setListaPonto((pontos as any).content || []);
+                const lista = ((pontos as any).content || []);
+                setListaPonto(lista);
+                if(lista.length === 0){
+                    notification.notify("Nenhum Ponto Turistico encontrado!", "info")
+                }
 
             }catch(error){
                 console.log(error)
@@ -49,11 +55,7 @@ export default function PontoPage(){
 
     function renderizarTelaPonto(){
         if(listaPonto.length === 0){
-            return(
-                <div className="col-span-3 text-gray-400 py-8 text-center w-full">
-                    Nenhum Ponto Turistico Encontrado!
-                </div>
-            );
+            return <p className="col-span-3 text-gray-400 py-8 text-center w-full">Nenhum Ponto Turistico</p>
         };
         return listaPonto?.map((pontos: PontoTuristico, index: number) => {
             return(

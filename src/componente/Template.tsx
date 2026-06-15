@@ -1,3 +1,4 @@
+'use client'
 import { Footer } from "./Footer"
 import { Header } from "./Header"
 
@@ -20,7 +21,7 @@ export const Template: React.FC<TemplateProps> = ({children, loading = true}: Te
                     </main>
 
                 <Footer/>
-                
+               
             </div>
         </>    
     )

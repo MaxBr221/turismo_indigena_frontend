@@ -48,7 +48,7 @@ class UserAuth{
         
 
         });
-        if(!response.ok || response.status != 202){
+        if(response.status != 201){
             const responseErro = await response.json();
             throw new Error(responseErro.error);
         }
