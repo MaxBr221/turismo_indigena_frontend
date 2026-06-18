@@ -7,10 +7,10 @@ import { PontoTuristico } from "@/resources/pontoTuristico/pontoTuristico";
 import { userAuth } from "@/resources/user/authenticatio.user";  
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from 'react';
-import { userNotification } from "@/componente/notification";
+import { notification } from "@/componente/notification";
 
 export default function PontoPage(){
-    const notification = userNotification();
+    const notificationPonto = notification();
     const pontoService = pontoTuristico();
     const auth = userAuth();
     const [query, setQuery] = useState<string>('');
@@ -34,7 +34,7 @@ export default function PontoPage(){
                 const lista = ((pontos as any).content || []);
                 setListaPonto(lista);
                 if(lista.length === 0){
-                    notification.notify("Nenhum Ponto Turistico encontrado!", "info")
+                    notificationPonto.notify("Nenhum Ponto Turistico encontrado!", "info")
                 }
 
             }catch(error){

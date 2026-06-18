@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/componente/button/Button";
 import { userAuth } from "@/resources/user/authenticatio.user"; 
 import { useRouter } from "next/navigation";
+import { notification } from "@/componente/notification";
 
 
 
@@ -15,6 +16,7 @@ export default function guiaPage(){
     const [local, setLocal] = useState<string>("");
     const [guia, setGuia] = useState<any>([]);
     const [carregandoSeguranca, setCarregandoSeguranca] = useState<boolean>(true); 
+    const notificationGuia = notification();
     const auth = authGuia();
     const authUser = userAuth();
     const router = useRouter();
@@ -33,7 +35,11 @@ export default function guiaPage(){
             try{
                 const guias = await auth.buscarGuia();
                 console.log("guias:", guias);
-                setGuia(guias || []);
+                const listaGuia = ((guias as any).content || []);
+                setGuia(listaGuia);
+                if(listaGuia.length === 0){
+                    notificationGuia.notify("Nenhum guia encontrado!", "info");
+                }
 
             }catch(error){
                 throw new Error("erro ao buscar guias");
@@ -42,9 +48,9 @@ export default function guiaPage(){
     },[])
     if(carregandoSeguranca){
         return(
-            <div className="w-full h-screen bg-gray-900 flex items-center justify-center text-white font-semibold">
-                Verificando credenciais de acesso...
-            </div>
+           <p className="w-full h-screen bg-gray-900 flex items-center justify-center text-white font-semibold">
+            Nenhum Guia no momento
+           </p>
         )
     }
 

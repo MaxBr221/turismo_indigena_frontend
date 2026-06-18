@@ -8,10 +8,10 @@ import { Formik, useFormik } from 'formik';
 import { Restaurante } from '@/resources/restaurante/restaurante.resource';
 import { userAuth } from '@/resources/user/authenticatio.user';
 import { useRouter } from "next/navigation";
-import { userNotification } from "@/componente/notification";
+import { notification } from "@/componente/notification";
 
 export default function RestaurantePage(){
-    const notification = userNotification();
+    const notificationRest = notification();
     const restauranteService = restaurantes();
     const router = useRouter();
     const auth = userAuth();
@@ -36,7 +36,7 @@ export default function RestaurantePage(){
                 const lista = ((getRestaurantes as any).content || []);
                 setRestaurante(lista);
                 if(lista.length === 0){
-                    notification.notify('Nenhum Restaurante encontrado!','info');
+                    notificationRest.notify('Nenhum Restaurante encontrado!','info');
                 }
 
             }catch(error){
@@ -111,7 +111,7 @@ export default function RestaurantePage(){
 
                     </section>
                   
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 w-full">
                     {renderizarRestaurantes()}
                     </div>
 

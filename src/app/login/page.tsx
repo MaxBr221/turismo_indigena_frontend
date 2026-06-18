@@ -10,11 +10,11 @@ import { userAuth } from "@/resources/user/authenticatio.user";
 import { useRouter } from 'next/navigation';
 import { FieldError } from "@/componente/FieldError";
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-import { userNotification } from "@/componente/notification";
+import { notification } from "@/componente/notification";
 
 export default function LoginPage(){
     const auth = userAuth();
-    const notify = userNotification();
+    const notify = notification();
     const router = useRouter();
     const [newUserStates, setNewUserStates] = useState<boolean> (false);
     const {values, handleChange, handleSubmit, errors, resetForm} = useFormik<LoginForm>({
@@ -34,15 +34,24 @@ export default function LoginPage(){
             try{
                 const acesso: TokenAcesso = await auth.userAuthentication(credencial);
                 if (!acesso || !acesso.token) {
-                    notify.notify("Senha incorretaaaaa!", "warning");
                     throw new Error("Senha incorreta ou falha na autenticação!");
                 }
+                if(acesso)
                 auth.initSession(acesso);
                 router.push("/painel");
                 console.log("Chegando no Painel");
             }catch(error: any){
-                notify.notify('Erro ao fazer login', 'error')
-                console.error("erro ao logar");
+                if (error.response) {
+                    const status = error.response.status;
+                    
+                    if (status === 401) {
+                        notify.notify('Senha incorreta!', 'error');
+                    } else {
+                        notify.notify('Usuário não cadastrado!', 'error');
+                    }
+                } else {
+                    notify.notify(error.message || 'Erro ao realizar login!', 'error');
+                }
             }
         }else{
             const newUser: Usuario = {login: values.login, senha: values.senha, nome: values.nome, telefone: values.telefone};
