@@ -13,8 +13,7 @@ export default function PontoPage(){
     const notificationPonto = notification();
     const pontoService = pontoTuristico();
     const auth = userAuth();
-    const [query, setQuery] = useState<string>('');
-    const [local, setLocal] = useState<string>('');
+    const [nome, setNome] = useState<string>('');
     const [listaPonto, setListaPonto] = useState<any[]>([]);
     const [carregandoSeguranca, setCarregandoSeguranca] = useState<boolean>(true); 
     const router = useRouter();
@@ -29,9 +28,15 @@ export default function PontoPage(){
         setCarregandoSeguranca(false);
          async function buscarPontoTuristico() {
             try{
-                const pontos = await pontoService.buscar(query, local);
-                console.log(pontos, "Pontos");
-                const lista = ((pontos as any).content || []);
+                let getPontoTuristico;
+
+                if(!nome || nome.trim() != null){
+                    getPontoTuristico = await pontoService.buscarPorNome(nome);
+                }else{
+                    getPontoTuristico = await pontoService.buscar();
+                }
+                console.log(getPontoTuristico, "Pontos");
+                const lista = ((getPontoTuristico as any).content || []);
                 setListaPonto(lista);
                 if(lista.length === 0){
                     notificationPonto.notify("Nenhum Ponto Turistico encontrado!", "info")
@@ -42,7 +47,7 @@ export default function PontoPage(){
             }
         }buscarPontoTuristico();
 
-    }, [query, local])
+    }, [nome])
 
     if (carregandoSeguranca) {
         return (
@@ -90,15 +95,8 @@ export default function PontoPage(){
 
                 <div className="gap-3 mt-4 py-4 p-6 rounded-xl">
                     <section className="flex justify-center items-center gap-2 mt-2 py-4">
-                        <InputText placeholder="Digite o Ponto Turistico" onChange={event => setQuery(event.target.value)}/>
+                        <InputText placeholder="Digite o Ponto Turistico" onChange={event => setNome(event.target.value)}/>
 
-                        <select className="border px-4 py-2 rounded-lg text-gray-900"
-                            value={local} onChange={event => setLocal(event.target.value)}>
-                            <option>PRAIA</option>
-                            <option>RIO</option>
-                            <option>CENTRO</option>
-                            <option>ALDEIA</option>
-                        </select>
                         <Button type="submit" 
                             style="bg-blue-500 hover:bg-blue-300"
                             label="Pesquisar"/>

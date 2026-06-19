@@ -15,8 +15,7 @@ export default function RestaurantePage(){
     const restauranteService = restaurantes();
     const router = useRouter();
     const auth = userAuth();
-    const [query, setQuery] = useState<string>('');
-    const [local, setLocal] = useState<string>('');
+    const [nome, setNome] = useState<string>('');
     const [restaurante, setRestaurante] = useState<any[]>([]);
     const [carregandoSeguranca, setCarregandoSeguranca] = useState<boolean>(true); 
 
@@ -31,11 +30,21 @@ export default function RestaurantePage(){
         setCarregandoSeguranca(false);
         async function buscarRestaurante(){
             try{
-                const getRestaurantes = await restauranteService.busca(query, local)
+                let getRestaurantes;
+
+                 if (nome && nome.trim() !== "") {
+                    getRestaurantes = await restauranteService.buscarUnidade(nome);
+                }else{
+                    getRestaurantes = await restauranteService.busca();
+                }
                 console.log(getRestaurantes, "restaurantes");
-                const lista = ((getRestaurantes as any).content || []);
+                const lista = Array.isArray(getRestaurantes) 
+                ? getRestaurantes 
+                : (getRestaurantes?.content || []);
                 setRestaurante(lista);
+
                 if(lista.length === 0){
+                    console.log(lista)
                     notificationRest.notify('Nenhum Restaurante encontrado!','info');
                 }
 
@@ -43,9 +52,28 @@ export default function RestaurantePage(){
                 console.error("Erro ao buscarRestaurantes: ", error);
             }
                 
-        }buscarRestaurante();
+        }const delayDebounce = setTimeout(() => {
+            buscarRestaurante();
+        }, 400);
 
-    }, [query, local]);
+        return () => clearTimeout(delayDebounce);
+
+    }, [nome]);
+    async function buscarPorBusca(nome: string) {
+        try{
+            const listRestaurante = await restauranteService.buscarUnidade(nome);
+            console.log(listRestaurante, "todos restaurantes");
+            const listaDeTodos = (listRestaurante as any || []);
+            setNome(listaDeTodos);
+            if(listRestaurante.length === 0){
+                notificationRest.notify("Restaurante não encontrado!", "info");
+            }
+
+        }catch(error){
+            console.error("Erro na busca dinamica", error);
+        }
+        
+    }
     if(carregandoSeguranca){
         return(
             <div className="w-full h-screen bg-gray-900 flex items-center justify-center text-white font-semibold">
@@ -96,15 +124,9 @@ export default function RestaurantePage(){
                 <div className="gap-3 mt-4 py-4 p-6 rounded-xl">
                 
                     <section className="flex justify-center items-center gap-2 mt-2 py-4">
-                        <InputText placeholder="Digite o nome do Restaurante" onChange={event => setQuery(event.target.value)}/>
+                        <InputText placeholder="Digite o nome do Restaurante" onChange={event => setNome(event.target.value)}/>
 
-                        <select className="border px-4 py-2 rounded-lg text-gray-900"
-                                value={local} onChange={event => setLocal(event.target.value)}>
-                            <option>PRAIA</option>
-                            <option>RIO</option>
-                            <option>CENTRO</option>
-                            <option>ALDEIA</option>
-                        </select>
+                       
                         <Button type='button'
                                 label='Pesquisar'
                                 style='bg-blue-500 hover:bg-blue-300'/>

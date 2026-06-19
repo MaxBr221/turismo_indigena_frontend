@@ -3,10 +3,9 @@ import { Restaurante } from "./restaurante.resource";
 class AuthRestaurante{
     baseUrl: string = 'http://localhost:8081/restaurantes/restaurantePaginacao';
 
-    async busca(query: string = "", local: string = ""): Promise<Restaurante[]> {
+    async busca(): Promise<Restaurante[]> {
         try{
-            const url = `${this.baseUrl}?query=${query}&local=${local}`
-            const response = await fetch(url, {
+            const response = await fetch(this.baseUrl, {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json",
@@ -29,6 +28,26 @@ class AuthRestaurante{
         }
         
         
+    }
+    async buscarUnidade(nome: string){
+        if(!nome.trim){
+            return [];
+        }
+        try{
+            const response = await fetch(`http://localhost:8081/restaurantes/busca?nome=${encodeURIComponent(nome)}`,{
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+
+                }
+            });
+            
+            return await response.json()
+        }catch(error){
+            console.error("Erro na busca dinamica", error);
+            throw error;
+        }
     }
 
 
