@@ -12,8 +12,7 @@ import { notification } from "@/componente/notification";
 
 
 export default function guiaPage(){
-    const [query, setQuery] = useState<string>("");
-    const [local, setLocal] = useState<string>("");
+    const [nome, setNome] = useState<string>("");
     const [guia, setGuia] = useState<any>([]);
     const [carregandoSeguranca, setCarregandoSeguranca] = useState<boolean>(true); 
     const notificationGuia = notification();
@@ -33,23 +32,31 @@ export default function guiaPage(){
 
         async function buscarGuia(){
             try{
-                const guias = await auth.buscarGuia();
-                console.log("guias:", guias);
-                const listaGuia = ((guias as any).content || []);
+                let getGuide;
+
+                if(!nome || nome.trim() != null){
+                    getGuide = await auth.buscarPorGuia(nome);
+                }else{
+                    getGuide = await auth.buscarGuia();
+                }
+                console.log("guias:", getGuide);
+                const listaGuia = ((getGuide as any).content || []);
                 setGuia(listaGuia);
+
                 if(listaGuia.length === 0){
                     notificationGuia.notify("Nenhum guia encontrado!", "info");
                 }
 
             }catch(error){
-                throw new Error("erro ao buscar guias");
+                console.error(error);
             }
         }buscarGuia();
-    },[])
+    },[nome])
+    
     if(carregandoSeguranca){
         return(
            <p className="w-full h-screen bg-gray-900 flex items-center justify-center text-white font-semibold">
-            Nenhum Guia no momento
+                Nenhum Guia no momento
            </p>
         )
     }
@@ -86,7 +93,7 @@ export default function guiaPage(){
 
                 <div className="gap-3 mt-4 py-4 p-6 rounded-xl">   
                     <section className="flex justify-center items-center gap-2 mt-2 py-4">
-                        <InputText placeholder="Pesquise o Guia desejado!" onChange={event => setQuery(event.target.value)} />
+                        <InputText placeholder="Pesquise o Guia desejado!" onChange={event => setNome(event.target.value)} />
                         <Button type="submit" 
                                 style="bg-blue-500 hover:bg-blue-300"
                                 label="Pesquisar"/>
