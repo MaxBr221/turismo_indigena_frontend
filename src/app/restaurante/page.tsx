@@ -88,7 +88,10 @@ export default function RestaurantePage(){
             return <p className="text-gray-400 text-center col-span-full">Nenhum restaurante disponível nesta região.</p>;
         };
         return restaurante?.map((rest: Restaurante, index: number) =>{
+            const numeroLimpo = rest.telefone ? rest.telefone.replace(/\D/g, '') : '';
+            const linkWhats = `https://wa.me/${numeroLimpo}?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20o%20restaurante%20${encodeURIComponent(rest.nome || '')}`;
             return(
+            
                     <div key={rest.id || index} className="bg-gray-800 w-60 border border-gray-700 rounded-xl p-2 shadow-lg flex flex-col justify-between hover:border-green-500 transition-all duration-200"
                     >
             
@@ -104,6 +107,31 @@ export default function RestaurantePage(){
                             {rest.localizacao || 'Local'}
                         </span>
             
+                    </div>
+                    <div className="mt-4 flex gap-2">
+                        {rest.localizacao && (
+                            <a
+                                href={rest.localizacao}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex-1 text-center bg-gray-700 hover:bg-gray-600 text-gray-200 font-medium py-1.5 px-2 rounded-lg text-xs transition-colors"
+                                title="Ver no Mapa"
+                            >
+                                🗺️ Mapa
+                            </a>
+                        )}
+
+                        {rest.telefone && (
+                            <a
+                                href={linkWhats}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex-1 text-center bg-green-600 hover:bg-green-500 text-white font-medium py-1.5 px-2 rounded-lg text-xs transition-colors flex items-center justify-center gap-1"
+                                title="Chamar no WhatsApp"
+                            >
+                                <span>💬</span> WhatsApp
+                            </a>
+                        )}
                     </div>
                 </div>    
 
