@@ -57,14 +57,14 @@ export default function PainelPage(){
             titulo: 'Ponto Turistico',
             rota: '/pontoTuristico',
             corEstilo: 'border-blue-500 hover:bg-green-50 text-orange-700 hover:scale-100',
-            icone: <span className="text-4xl">🍽️</span>
+            icone: <span className="text-4xl">🏛️</span>
         },
         {
             id: 'guia',
             titulo: 'Guias Turistico',
             rota: '/guia',
             corEstilo: 'border-blue-500 hover:bg-green-50 text-orange-700 hover:scale-100',
-            icone: <span className="text-4xl">🍽️</span>
+            icone: <span className="text-4xl">🧭</span>
         }
 
     ];

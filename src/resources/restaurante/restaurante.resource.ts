@@ -3,6 +3,8 @@ export class Restaurante{
     nome?: string;
     descricao?: string;
     localizacao?: string;
+    latitude?: string;
+    longitude?: string;
     horarioFuncionamento?: string;
     telefone?: string;
     redeSociais?: string;

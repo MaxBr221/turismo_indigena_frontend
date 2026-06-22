@@ -71,7 +71,10 @@ export default function guiaPage(){
 
         };
         return guia?.map((guias: Guia, index: number) => {
+            const numeroLimpo = guias.telefone ? guias.telefone.replace(/\D/g, '') : '';
+            const linkWhats = `https://wa.me/${numeroLimpo}?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20o%20restaurante%20${encodeURIComponent(guias.nome || '')}`;
             return(
+            
                 <div key={guias.id || index} className="bg-gray-800 w-60 border border-gray-700 rounded-xl p-2 shadow-lg flex flex-col justify-between hover:border-green-500 transition-all duration-200">
                      <div>
                         <div className="h-32 w-full bg-gray-700 rounded-lg flex items-center justify-center text-gray-500 text-3xl mb-4">
@@ -79,6 +82,19 @@ export default function guiaPage(){
                         </div>
                         <h3 className="text-xl font-bold text-white text-left">{guias.nome || 'Nome do Ponto Turistico'}</h3>
                         <p className="text-sm text-gray-400 text-left mt-1">📍 {guias.descricao || 'Descrição não informada'}</p>
+                    </div>
+                    <div className="mt-4 flex gap-2">
+                        {guias.telefone && (
+                                <a
+                                    href={linkWhats}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex-1 text-center bg-green-600 hover:bg-green-500 text-white font-medium py-1.5 px-2 rounded-lg text-xs transition-colors flex items-center justify-center gap-1"
+                                    title="Chamar no WhatsApp"
+                                >
+                                    <span>💬</span> WhatsApp
+                                </a>
+                            )}
                     </div>
                 </div>
             )
@@ -103,12 +119,7 @@ export default function guiaPage(){
                     {renderizarTelaGuia()}
                     </div>
                 </div>
-
-
-
-
-
-                
+           
             </div>
         </Template>
     )

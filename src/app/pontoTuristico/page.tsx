@@ -63,6 +63,9 @@ export default function PontoPage(){
             return <p className="col-span-3 text-gray-400 py-8 text-center w-full">Nenhum Ponto Turistico</p>
         };
         return listaPonto?.map((pontos: PontoTuristico, index: number) => {
+            const linkMapaCoords = (pontos.latitude && pontos.longitude)
+                ? `https://www.google.com/maps/search/?api=1&query=${pontos.latitude},${pontos.longitude}`
+                : null;
             return(
                 <div key={pontos.id || index} className="bg-gray-800 w-60 border border-gray-700 rounded-xl p-2 shadow-lg flex flex-col justify-between hover:border-green-500 transition-all duration-200"
                     >
@@ -79,6 +82,20 @@ export default function PontoPage(){
                             {pontos.local || 'Local'}
                         </span>
             
+                    </div>
+                    <div className="mt-4 flex gap-2">
+                         {linkMapaCoords && (
+                            <a
+                                href={linkMapaCoords}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex-1 text-center bg-gray-700 hover:bg-gray-600 text-gray-200 font-medium py-1.5 px-2 rounded-lg text-xs transition-colors"
+                                title="Ver no Mapa"
+                            >
+                                🗺️ Mapa
+                            </a>
+                        )}
+
                     </div>
                 </div>    
             )

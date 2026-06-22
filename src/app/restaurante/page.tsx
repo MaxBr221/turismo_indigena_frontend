@@ -88,6 +88,9 @@ export default function RestaurantePage(){
             return <p className="text-gray-400 text-center col-span-full">Nenhum restaurante disponível nesta região.</p>;
         };
         return restaurante?.map((rest: Restaurante, index: number) =>{
+            const linkMapaCoords = (rest.latitude && rest.longitude)
+                ? `https://www.google.com/maps/search/?api=1&query=${rest.latitude},${rest.longitude}`
+                : null;
             const numeroLimpo = rest.telefone ? rest.telefone.replace(/\D/g, '') : '';
             const linkWhats = `https://wa.me/${numeroLimpo}?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20o%20restaurante%20${encodeURIComponent(rest.nome || '')}`;
             return(
@@ -109,9 +112,9 @@ export default function RestaurantePage(){
             
                     </div>
                     <div className="mt-4 flex gap-2">
-                        {rest.localizacao && (
+                        {linkMapaCoords && (
                             <a
-                                href={rest.localizacao}
+                                href={linkMapaCoords}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="flex-1 text-center bg-gray-700 hover:bg-gray-600 text-gray-200 font-medium py-1.5 px-2 rounded-lg text-xs transition-colors"
