@@ -1,7 +1,7 @@
 import { Guia } from "./guia.resources";
 
 class AuthenticationGuia{
-    baseString: string = "http://localhost:8081/guide";
+    baseString: string = "http://localhost:8081http://localhost:8081/guide";
     
 
     async buscarGuia(): Promise<Guia>{
