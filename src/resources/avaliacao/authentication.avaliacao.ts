@@ -1,18 +1,29 @@
 import { string } from "yup"
 import { Avaliacao } from "./avaliacao.resource"
+import { userAuth } from "../user/authenticatio.user";
 
 class AuthenticationAvaliacao{
     baseString: string = "http://localhost:8081/avaliacao"
+    
 
 
     async avaliarRestaurante(idRestaurante: number, nota: number, comentario?: string){
+        const auth = userAuth();
         try{
-
+            // 1️⃣ Recupera o objeto de sessão completo usando o seu método
+            const sessao = auth.getUserSession(); 
+        
+            const tokenStr = sessao ? sessao.token : null;
+            if(!tokenStr){
+                throw new Error("Essa Usuário não está autenticado no sistema!");
+            }
+            console.log("Token da User/Avaliacao", tokenStr)
             const response = await fetch(this.baseString + "/avaliarRestaurante", {
                 method: 'POST',
                 headers: {
                         "Content-Type": "application/json",
-                        "Accept": "application/json"
+                        "Accept": "application/json",
+                        "authorization": `Bearer ${tokenStr}`
     
                 },
                 body: JSON.stringify({
@@ -26,7 +37,6 @@ class AuthenticationAvaliacao{
             if(!response.ok){
                 throw new Error("Erro ao avaliar Restaurante!");
             }
-            return await response.json();
         }catch(error){
             console.error("Erro na avaliação", error);
             throw error;
