@@ -8,14 +8,19 @@ import { userAuth } from "@/resources/user/authenticatio.user";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from 'react';
 import { notification } from "@/componente/notification";
+import { authAvaliacao } from '@/resources/avaliacao/authentication.avaliacao';
 
 export default function PontoPage(){
     const notificationPonto = notification();
     const pontoService = pontoTuristico();
     const auth = userAuth();
+    const avaliacaoService = authAvaliacao(notificationPonto);
+    const [avaliar, setAvaliar] = useState<PontoTuristico | null>(null);
     const [nome, setNome] = useState<string>('');
     const [listaPonto, setListaPonto] = useState<any[]>([]);
-    const [carregandoSeguranca, setCarregandoSeguranca] = useState<boolean>(true); 
+    const [carregandoSeguranca, setCarregandoSeguranca] = useState<boolean>(true);
+    const [notaDigitada, setNotaDigitada] = useState<string>('');
+    const [comentarioDigitado, setComentarioDigitado] = useState<string>(''); 
     const router = useRouter();
     
     useEffect(() => {
@@ -62,9 +67,11 @@ export default function PontoPage(){
         if(listaPonto.length === 0){
             return <p className="col-span-3 text-gray-400 py-8 text-center w-full">Nenhum Ponto Turistico</p>
         };
-        return listaPonto?.map((pontos: PontoTuristico, index: number) => {
+        return (
+            <>
+            {listaPonto?.map((pontos: PontoTuristico, index: number) => {
             const linkMapaCoords = (pontos.latitude && pontos.longitude)
-                ? `https://www.google.com/maps/search/?api=1&query=${pontos.latitude},${pontos.longitude}`
+                ? `https://www.google.com/maps?q=${pontos.latitude},${pontos.longitude}`
                 : null;
             return(
                 <div key={pontos.id || index} className="bg-gray-800 w-60 border border-gray-700 rounded-xl p-2 shadow-lg flex flex-col justify-between hover:border-green-500 transition-all duration-200"
@@ -99,7 +106,76 @@ export default function PontoPage(){
                     </div>
                 </div>    
             )
-        })
+        })};
+        {avaliar && (
+                <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+                    <div className="bg-gray-800 border border-gray-700 p-6 rounded-xl w-80 text-white shadow-2xl">
+                        <h3 className="text-lg font-bold">Avaliar {avaliar?.nome}</h3>
+                        <p className="text-xs text-gray-400 mt-1">Dê sua nota de 0 a 10 e deixe um comentário.</p>
+
+                        <div className="mt-4">
+                            <label className="text-xs text-gray-400 block mb-1">Nota:</label>
+                            <input 
+                                type="number" 
+                                min="0" 
+                                max="10" 
+                                step="0.1"
+                                placeholder="Ex: 9.5"
+                                value={notaDigitada}
+                                onChange={(event => setNotaDigitada(event.target.value))}
+                                className="w-full bg-gray-700 border border-gray-600 rounded p-1.5 text-white outline-none focus:border-blue-500 text-sm" 
+                            />
+                        </div>
+
+                        <div className="mt-3">
+                            <label className="text-xs text-gray-400 block mb-1">Comentário:</label>
+                            <textarea 
+                                placeholder="O que você achou do Ponto Turistico?"
+                                className="w-full bg-gray-700 border border-gray-600 rounded p-1.5 text-white h-20 resize-none text-sm outline-none focus:border-blue-500" 
+                                value={comentarioDigitado}
+                                onChange={(event) => setComentarioDigitado(event.target.value)} />
+                        </div>
+
+                        <div className="mt-5 flex gap-2 justify-end text-xs">
+                            <button 
+                                onClick={() => {
+                                    setAvaliar(null); // Fecha a modal
+                                    // 🧹 Limpa os campos para a próxima avaliação
+                                    setNotaDigitada('');
+                                    setComentarioDigitado('');
+                                }}
+                                className="px-3 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors cursor-pointer"
+                            >
+                                Cancelar
+                            </button>
+                            <button 
+                                onClick={() => {
+
+                                    const notaEmNumero = parseFloat(notaDigitada);
+                                    if (isNaN(notaEmNumero) || notaEmNumero < 0 || notaEmNumero > 10) {
+                                        notificationPonto.notify("Por favor, digite uma nota válida entre 0 e 10.", "warning")
+                                        return;
+                                    }
+                                    if (!avaliar || !avaliar.id) {
+                                        alert("Erro: Não foi possível identificar o ID do Ponto Turistico.");
+                                        return;
+                                    }
+                                    avaliacaoService.avaliarPontoTuristico(avaliar.id, notaEmNumero, comentarioDigitado)
+                                    console.log("Enviando avaliação para o Ponto Turistico ID:", avaliar?.id);
+                                    setAvaliar(null);
+                                    setNotaDigitada('');
+                                    setComentarioDigitado('');
+                                }}
+                                className="px-4 py-2 bg-green-600 rounded-lg hover:bg-green-500 font-semibold transition-colors cursor-pointer"
+                            >
+                                Enviar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )};
+        </>
+        );
     }
     
     return(

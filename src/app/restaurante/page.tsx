@@ -14,7 +14,7 @@ import { authAvaliacao } from '@/resources/avaliacao/authentication.avaliacao';
 export default function RestaurantePage(){
     const notificationRest = notification();
     const restauranteService = restaurantes();
-    const avaliacao = authAvaliacao();
+    const avaliacaoService = authAvaliacao(notificationRest);
     const router = useRouter();
     const auth = userAuth();
     const [avaliar, setAvaliar] = useState<Restaurante | null>(null);
@@ -96,7 +96,7 @@ export default function RestaurantePage(){
         <>
             {restaurante?.map((rest: Restaurante, index: number) => {
                 const linkMapaCoords = (rest.latitude && rest.longitude)
-                    ? `http://googleusercontent.com/maps.google.com/?q=${rest.latitude},${rest.longitude}`
+                    ? `https://www.google.com/maps?q=${rest.latitude},${rest.longitude}`
                     : null;
                 
                 const numeroLimpo = rest.telefone ? rest.telefone.replace(/\D/g, '') : '';
@@ -211,9 +211,8 @@ export default function RestaurantePage(){
                                         alert("Erro: Não foi possível identificar o ID do restaurante.");
                                         return;
                                     }
-                                    avaliacao.avaliarRestaurante(avaliar.id, notaEmNumero, comentarioDigitado)
+                                    avaliacaoService.avaliarRestaurante(avaliar.id, notaEmNumero, comentarioDigitado)
                                     console.log("Enviando avaliação para o restaurante ID:", avaliar?.id);
-                                    notificationRest.notify("Avaliação feita com sucesso!", "success");
                                     setAvaliar(null);
                                     setNotaDigitada('');
                                     setComentarioDigitado('');

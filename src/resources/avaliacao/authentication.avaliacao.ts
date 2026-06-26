@@ -1,11 +1,15 @@
 import { string } from "yup"
 import { Avaliacao } from "./avaliacao.resource"
 import { userAuth } from "../user/authenticatio.user";
+import { notification } from "@/componente/notification";
 
 class AuthenticationAvaliacao{
     baseString: string = "http://localhost:8081/avaliacao"
+    notification: any;
     
-
+    constructor(notificationService: any) {
+        this.notification = notificationService; // 🎯 Injeta aqui
+    }
 
     async avaliarRestaurante(idRestaurante: number, nota: number, comentario?: string){
         const auth = userAuth();
@@ -27,16 +31,19 @@ class AuthenticationAvaliacao{
     
                 },
                 body: JSON.stringify({
-                notaEmNumero: Math.round(nota), // 🎯 Se o Java pede Integer, force um inteiro com Math.round()!
-                comentarioDigitado: comentario, // 🎯 Bate com @JsonProperty("comentarioDigitado")
-                id: idRestaurante,              // 🎯 Bate com @JsonProperty("id")
-                idPonto: null                   // 🎯 Adicione o campo que falta (ou o valor correto dele)
+                notaEmNumero: Math.round(nota),
+                comentarioDigitado: comentario, 
+                id: idRestaurante,              
+                idPonto: null                  
         })
             });
     
             if(!response.ok){
+                this.notification.notify("Não é permitido avaliar um restaurante mais de uma vez!","error");
                 throw new Error("Erro ao avaliar Restaurante!");
             }
+            this.notification.notify("Avaliação feita com sucesso!", "success");
+            return true;
         }catch(error){
             console.error("Erro na avaliação", error);
             throw error;
@@ -44,22 +51,36 @@ class AuthenticationAvaliacao{
 
     }
 
-    async avaliarPontoTuristico(id:number ,nota?: number, comentario?: string){
-        try{
+    async avaliarPontoTuristico(idPonto:number ,nota: number, comentario?: string){
+        const auth = userAuth();
+
+        try{    
+            const sessao = auth.getUserSession(); 
+            const tokenStr = sessao ? sessao.token : null;
 
             const response = await fetch(this.baseString + "/avaliarPontoTuristico", {
                 method: 'POST',
                 headers: {
                         "Content-Type": "application/json",
-                        "Accept": "application/json"
+                        "Accept": "application/json",
+                        "authorization": `Bearer ${tokenStr}`
     
-                    }
+                    },
+                    body: JSON.stringify({
+                    notaEmNumero: Math.round(nota),
+                    comentarioDigitado: comentario, 
+                    idRestaurante: null,              
+                    id: idPonto                  
+        })
+
             });
     
             if(!response.ok){
+                this.notification.notify("Não é permitido avaliar um Ponto Turistico mais de uma vez!","error");
                 throw new Error("Erro ao avaliar Ponto Turistico!");
             }
-            return await response.json();
+            this.notification.notify("Avaliação feita com sucesso!", "success");
+            return true;
         }catch(error){
             console.error("Erro na avaliação", error);
             throw error;
@@ -67,4 +88,4 @@ class AuthenticationAvaliacao{
 
     }
 }
-export const authAvaliacao = () => new AuthenticationAvaliacao;
+export const authAvaliacao = (notificationService: any) => new AuthenticationAvaliacao(notificationService);
