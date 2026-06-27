@@ -4,20 +4,14 @@ import { useEffect, useState } from 'react';
 import { CardMenu } from "@/resources/painel/painel.resources";
 import { useRouter } from 'next/navigation'
 import { Template } from "@/componente/Template";
-import { Button } from "@/componente/button/Button";
 
 export default function PainelPage(){
     const auth = userAuth();
     const router = useRouter();
     const [carregadoSessao, setCarregandoSessao] = useState(true);
+    const [menuAberto, setMenuAberto] = useState(false);
 
     useEffect(() => {
-        const sessaoAtiva = auth.getUserSession();
-        if(!sessaoAtiva){
-            console.log("Token inválido, redirecionando para tela de login..");
-            router.push("/login");
-            return;
-        }
         setCarregandoSessao(false);
         try{
             const sessaoAtiva = auth.getUserSession();
@@ -35,6 +29,13 @@ export default function PainelPage(){
             console.error("Erro ao entrar no painel")
         } 
     },[auth, router]);
+    
+    const lidarComSair = () => {
+        if (typeof window !== "undefined") {
+            localStorage.removeItem("_auth"); // Remove a sessão do navegador
+        }
+        router.push("/login");
+    };
 
     if (carregadoSessao) {
         return (
@@ -72,6 +73,44 @@ export default function PainelPage(){
     return (
         <Template>
             <div>
+                
+                {/* 🎯 BOTÃO E MENU DROPDOWN DE USUÁRIO */}
+                <div className="-mt-1 absolute right-4 top-2 z-50">
+                    <button 
+                        onClick={() => setMenuAberto(!menuAberto)}
+                        className="flex items-center gap-2 bg-gray-800 text-white hover:bg-gray-700 px-4 py-2 rounded-xl font-medium transition-colors border border-gray-700 focus:outline-none shadow-md"
+                    >
+                        👤 Menu
+                        <span className={`text-xs transition-transform duration-200 ${menuAberto ? 'rotate-180' : ''}`}>
+                            ▼
+                        </span>
+                    </button>
+
+                    {/* CAIXA SUSPENSA DO MENU */}
+                    {menuAberto && (
+                        <div className="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-xl shadow-2xl py-2 animate-fade-in text-white">
+                            <button
+                                onClick={() => {
+                                    setMenuAberto(false);
+                                    router.push("/user"); // Rota do Perfil
+                                }}
+                                className="w-full text-left px-4 py-2.5 text-sm hover:bg-gray-700 transition-colors flex items-center gap-2 text-gray-200"
+                            >
+                                🖼️ Ver Perfil
+                            </button>
+                            
+                            <hr className="border-gray-700 my-1" />
+                            
+                            <button
+                                onClick={lidarComSair}
+                                className="w-full text-left px-4 py-2.5 text-sm text-red-400 hover:bg-red-950/40 hover:text-red-300 transition-colors flex items-center gap-2 font-semibold"
+                            >
+                                🚪 Sair
+                            </button>
+                        </div>
+                    )}
+                </div>
+
                 <div className="mt-2 py-3 text-center">
                     <h2 className="font-bold lg-roudend">Painel Principal</h2>
                 </div>

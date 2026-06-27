@@ -21,6 +21,7 @@ class UserAuth{
             }
         
         });
+    
 
         if (!response.ok) {
             const dadosErro = await response.json();
@@ -81,17 +82,22 @@ class UserAuth{
             const sessaoUser = localStorage.getItem(UserAuth.AUTH_PARAM);
             if(!sessaoUser){
                 console.log("token do getSessioNull: ", sessaoUser);
-                return null;
-
-                
+                return null;  
             }
             const token:UsuarioSessaoToken = JSON.parse(sessaoUser);
-            console.log("token do getSessio: ", token);
+            console.log("nome no token: ", token.nome);
             return token;
         }catch(error){
             console.error("Erro ao buscar token: ", error);
             return null;
         }
+    }
+    getUserLogado(){
+        const sessao = this.getUserSession();
+        if(!sessao){
+            return null;
+        }
+        return sessao;
     }
     logout() {
         try {

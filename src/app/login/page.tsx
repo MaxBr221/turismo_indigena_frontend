@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useFormik } from "formik";
 import { Button } from "@/componente/button/Button";
 import { LoginForm, formScheme, validationScheme } from "@/componente/login/formScheme";
-import { Credencial, TokenAcesso, Usuario } from "@/resources/user/user.resources";
+import { Credencial, TokenAcesso, Usuario, UsuarioSessaoToken } from "@/resources/user/user.resources";
 import { userAuth } from "@/resources/user/authenticatio.user";
 import { useRouter } from 'next/navigation';
 import { FieldError } from "@/componente/FieldError";
@@ -32,12 +32,11 @@ export default function LoginPage(){
         if(!newUserStates){
             const credencial: Credencial = {login: values.login, senha: values.senha};
             try{
-                const acesso: TokenAcesso = await auth.userAuthentication(credencial);
+                const acesso: UsuarioSessaoToken = await auth.userAuthentication(credencial);
                 if (!acesso || !acesso.token) {
                     throw new Error("Senha incorreta ou falha na autenticação!");
                 }
-                if(acesso)
-                auth.initSession(acesso);
+                auth.setUserSession(acesso);
                 router.push("/painel");
                 console.log("Chegando no Painel");
             }catch(error: any){
@@ -71,8 +70,8 @@ export default function LoginPage(){
     async function handleLoginGoogleSucesso(credentialResponse: any) {
         try {
             console.log("Token criptografado enviado pelo Google:", credentialResponse.credential);
-            const acesso = await auth.loginComGoogle(credentialResponse.credential);
-            auth.initSession(acesso);
+            const acesso: UsuarioSessaoToken = await auth.loginComGoogle(credentialResponse.credential);
+            auth.setUserSession(acesso);
             router.push("/painel");
             console.log("Logado com Google com sucesso!");
             

@@ -28,14 +28,7 @@ export const Header: React.FC = () =>{
                     onClick={() => router.push('/painel')} 
                     />
                 )}
-                {mostrarBotaoSair && (
-                    <Button type="button"
-                            label="Sair"
-                            style="text-white font-bold bg-red-600 hover:bg-red-700 px-4 py-2 -mt-7 rounded-md transition-colors"
-                            onClick={() => router.push("/login")}
-                            />
-                )}
-
+               
             </div>
 
         </header>
