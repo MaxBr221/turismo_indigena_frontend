@@ -4,7 +4,7 @@ import { InputText } from "@/componente/input/InputText";
 import { Template } from "@/componente/Template";
 import { pontoTuristico } from "@/resources/pontoTuristico/authentication.pontoTuristico";
 import { PontoTuristico } from "@/resources/pontoTuristico/pontoTuristico";
-import { userAuth } from "@/resources/user/authenticatio.user";  
+import { userAuth } from "@/resources/user/authenticatio.user";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from 'react';
 import { notification } from "@/componente/notification";
@@ -15,14 +15,14 @@ export default function PontoPage(){
     const pontoService = pontoTuristico();
     const auth = userAuth();
     const avaliacaoService = authAvaliacao(notificationPonto);
-    const [avaliar, setAvaliar] = useState<PontoTuristico | null>(null);
-    const [nome, setNome] = useState<string>('');
-    const [listaPonto, setListaPonto] = useState<any[]>([]);
-    const [carregandoSeguranca, setCarregandoSeguranca] = useState<boolean>(true);
-    const [notaDigitada, setNotaDigitada] = useState<string>('');
-    const [comentarioDigitado, setComentarioDigitado] = useState<string>(''); 
+    const [avaliar, setAvaliar] = useState< PontoTuristico  |  null >(null);
+    const [nome, setNome] = useState< string >('');
+    const [listaPonto, setListaPonto] = useState< any []>([]);
+    const [carregandoSeguranca, setCarregandoSeguranca] = useState< boolean >(true);
+    const [notaDigitada, setNotaDigitada] = useState< string >('');
+    const [comentarioDigitado, setComentarioDigitado] = useState< string >('');
     const router = useRouter();
-    
+
     useEffect(() => {
         const sessaoAtiva = auth.getUserSession();
         if (!sessaoAtiva) {
@@ -31,126 +31,111 @@ export default function PontoPage(){
             return;
         }
         setCarregandoSeguranca(false);
-         async function buscarPontoTuristico() {
+        async function buscarPontoTuristico() {
             try{
                 let getPontoTuristico;
-
                 if(!nome || nome.trim() != null){
                     getPontoTuristico = await pontoService.buscarPorNome(nome);
                 }else{
                     getPontoTuristico = await pontoService.buscar();
                 }
                 console.log(getPontoTuristico, "Pontos");
-                const lista = ((getPontoTuristico as any).content || []);
+                const lista = ((getPontoTuristico as  any ).content || []);
                 setListaPonto(lista);
                 if(lista.length === 0){
                     notificationPonto.notify("Nenhum Ponto Turistico encontrado!", "info")
                 }
-
             }catch(error){
                 console.log(error)
             }
         }buscarPontoTuristico();
-
     }, [nome])
 
     if (carregandoSeguranca) {
         return (
-            <div className="w-full h-screen bg-gray-900 flex items-center justify-center text-white font-semibold">
+            <div  className ="w-full h-screen bg-[#FDFBF7] flex items-center justify-center text-[#1A5F7A] font-semibold">
                 Verificando credenciais de acesso...
             </div>
         );
     }
 
-
     function renderizarTelaPonto(){
         if(listaPonto.length === 0){
-            return <p className="col-span-3 text-gray-400 py-8 text-center w-full">Nenhum Ponto Turistico</p>
+            return <p  className ="col-span-3 text-gray-500 py-8 text-center w-full">Nenhum Ponto Turístico encontrado</p>
         };
         return (
             <>
-            {listaPonto?.map((pontos: PontoTuristico, index: number) => {
-            const linkMapaCoords = (pontos.latitude && pontos.longitude)
-                ? `https://www.google.com/maps?q=${pontos.latitude},${pontos.longitude}`
+            {listaPonto?.map(( pontos : PontoTuristico,  index :  number ) => {
+                const linkMapaCoords = ( pontos .latitude &&  pontos .longitude)
+                ? `https://www.google.com/maps?q=${ pontos .latitude},${ pontos .longitude}`
                 : null;
-            return(
-                <div key={pontos.id || index} className="bg-gray-800 w-60 border border-gray-700 rounded-xl p-2 shadow-lg flex flex-col justify-between hover:border-green-500 transition-all duration-200"
-                    >
-            
-                    <div>
-                        <div className="h-32 w-full bg-gray-700 rounded-lg flex items-center justify-center text-gray-500 text-3xl mb-4">
-                            🍕
+                return(
+                    <div  key ={ pontos .id ||  index }  className ="bg-white w-60 border border-[#EADCC9] rounded-xl p-3 shadow-md flex flex-col justify-between hover:border-[#C05C32] transition-all duration-200">
+                        <div>
+                            <div  className ="h-32 w-full bg-[#E3F2FD] rounded-lg flex items-center justify-center text-gray-500 text-3xl mb-4">
+                                🗿
+                            </div>
+                            <h3  className ="text-xl font-bold text-[#1A5F7A] text-left">{ pontos .nome || 'Nome do Ponto Turistico'}</h3>
+                            <p  className ="text-sm text-gray-600 text-left mt-1">📍 { pontos .informacoes || 'Descrição não informada'}</p>
                         </div>
-                        <h3 className="text-xl font-bold text-white text-left">{pontos.nome || 'Nome do Ponto Turistico'}</h3>
-                        <p className="text-sm text-gray-400 text-left mt-1">📍 {pontos.informacoes || 'Descrição não informada'}</p>
+                        <div  className ="mt-4 flex items-center justify-between">
+                            <span  className ="text-xs bg-[#C05C32]/10 text-[#C05C32] font-semibold px-2.5 py-1 rounded-full">
+                                { pontos .local || 'Local'}
+                            </span>
+                        </div>
+                        <div  className ="mt-4 flex gap-2">
+                            {linkMapaCoords && (
+                                <a
+                                    href ={linkMapaCoords}
+                                    target ="_blank"
+                                    rel ="noopener noreferrer"
+                                    className ="flex-1 text-center bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-1.5 px-2 rounded-lg text-xs transition-colors border border-gray-200"
+                                    title ="Ver no Mapa"
+                                >
+                                    🗺️ Mapa
+                                </a>
+                            )}
+                        </div>
                     </div>
-                    <div className="mt-4 flex items-center justify-between">
-                        <span className="text-xs bg-orange-500/20 text-orange-400 font-semibold px-2.5 py-1 rounded-full">
-                            {pontos.local || 'Local'}
-                        </span>
-            
-                    </div>
-                    <div className="mt-4 flex gap-2">
-                         {linkMapaCoords && (
-                            <a
-                                href={linkMapaCoords}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex-1 text-center bg-gray-700 hover:bg-gray-600 text-gray-200 font-medium py-1.5 px-2 rounded-lg text-xs transition-colors"
-                                title="Ver no Mapa"
-                            >
-                                🗺️ Mapa
-                            </a>
-                        )}
+                )
+            })};
+            {avaliar && (
+                <div  className ="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+                    <div  className ="bg-white border border-[#EADCC9] p-6 rounded-xl w-80 text-gray-800 shadow-2xl">
+                        <h3  className ="text-lg font-bold text-[#1A5F7A]">Avaliar {avaliar?.nome}</h3>
+                        <p  className ="text-xs text-gray-500 mt-1">Dê sua nota de 0 a 10 e deixe um comentário.</p>
 
-                    </div>
-                </div>    
-            )
-        })};
-        {avaliar && (
-                <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
-                    <div className="bg-gray-800 border border-gray-700 p-6 rounded-xl w-80 text-white shadow-2xl">
-                        <h3 className="text-lg font-bold">Avaliar {avaliar?.nome}</h3>
-                        <p className="text-xs text-gray-400 mt-1">Dê sua nota de 0 a 10 e deixe um comentário.</p>
-
-                        <div className="mt-4">
-                            <label className="text-xs text-gray-400 block mb-1">Nota:</label>
-                            <input 
-                                type="number" 
-                                min="0" 
-                                max="10" 
-                                step="0.1"
-                                placeholder="Ex: 9.5"
-                                value={notaDigitada}
-                                onChange={(event => setNotaDigitada(event.target.value))}
-                                className="w-full bg-gray-700 border border-gray-600 rounded p-1.5 text-white outline-none focus:border-blue-500 text-sm" 
+                        <div  className ="mt-4">
+                            <label  className ="text-xs text-gray-500 block mb-1">Nota:</label>
+                            <input
+                                type ="number"  min ="0"  max ="10"  step ="0.1"  placeholder ="Ex: 9.5"  value ={notaDigitada}
+                                onChange ={( event  => setNotaDigitada( event .target.value))}
+                                className ="w-full bg-gray-50 border border-[#EADCC9] rounded p-1.5 text-gray-800 outline-none focus:border-[#57C5B6] text-sm"
                             />
                         </div>
 
-                        <div className="mt-3">
-                            <label className="text-xs text-gray-400 block mb-1">Comentário:</label>
-                            <textarea 
-                                placeholder="O que você achou do Ponto Turistico?"
-                                className="w-full bg-gray-700 border border-gray-600 rounded p-1.5 text-white h-20 resize-none text-sm outline-none focus:border-blue-500" 
-                                value={comentarioDigitado}
-                                onChange={(event) => setComentarioDigitado(event.target.value)} />
+                        <div  className ="mt-3">
+                            <label  className ="text-xs text-gray-500 block mb-1">Comentário:</label>
+                            <textarea
+                                placeholder ="O que você achou do Ponto Turistico?"
+                                className ="w-full bg-gray-50 border border-[#EADCC9] rounded p-1.5 text-gray-800 h-20 resize-none text-sm outline-none focus:border-[#57C5B6]"
+                                value ={comentarioDigitado}
+                                onChange ={( event ) => setComentarioDigitado(event.target.value)} />
                         </div>
 
-                        <div className="mt-5 flex gap-2 justify-end text-xs">
-                            <button 
-                                onClick={() => {
-                                    setAvaliar(null); // Fecha a modal
-                                    // 🧹 Limpa os campos para a próxima avaliação
+                        <div  className ="mt-5 flex gap-2 justify-end text-xs">
+                            <button
+                                onClick ={() => {
+                                    setAvaliar(null);
                                     setNotaDigitada('');
                                     setComentarioDigitado('');
                                 }}
-                                className="px-3 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors cursor-pointer"
+                                className ="px-3 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer border border-gray-200"
                             >
                                 Cancelar
                             </button>
-                            <button 
-                                onClick={() => {
-
+                            <button
+                                onClick ={() => {
                                     const notaEmNumero = parseFloat(notaDigitada);
                                     if (isNaN(notaEmNumero) || notaEmNumero < 0 || notaEmNumero > 10) {
                                         notificationPonto.notify("Por favor, digite uma nota válida entre 0 e 10.", "warning")
@@ -166,43 +151,38 @@ export default function PontoPage(){
                                     setNotaDigitada('');
                                     setComentarioDigitado('');
                                 }}
-                                className="px-4 py-2 bg-green-600 rounded-lg hover:bg-green-500 font-semibold transition-colors cursor-pointer"
+                                className ="px-4 py-2 bg-[#C05C32] text-white rounded-lg hover:bg-[#A84A24] font-semibold transition-colors cursor-pointer"
                             >
                                 Enviar
                             </button>
                         </div>
                     </div>
                 </div>
-            )};
-        </>
+            )}
+            </>
         );
     }
-    
+
     return(
-        <Template>
-            <div className="w-full text-center mt-4">
-
-                <div className="mt-5 py-3">
-                    <h2 className="font-bold ">Pontos Turisticos</h2>
-                </div>
-
-                <div className="gap-3 mt-4 py-4 p-6 rounded-xl">
-                    <section className="flex justify-center items-center gap-2 mt-2 py-4">
-                        <InputText placeholder="Digite o Ponto Turistico" onChange={event => setNome(event.target.value)}/>
-
-                        <Button type="submit" 
-                            style="bg-blue-500 hover:bg-blue-300"
-                            label="Pesquisar"/>
-                    </section>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">   
-                    {renderizarTelaPonto()}
-                    </div>
-
-                </div>
-                
+        < Template >
+        <div  className ="w-full text-center mt-4 bg-[#FDFBF7] min-h-screen pb-12 text-gray-800">
+            <div  className ="mt-5 py-3">
+                <h2  className ="font-bold text-3xl text-[#1A5F7A]">Pontos Turísticos</h2>
             </div>
 
-        </Template>
+            <div  className ="gap-3 mt-4 py-4 p-6 rounded-xl">
+                <section  className ="flex justify-center items-center gap-2 mt-2 py-4 max-w-xl mx-auto bg-white p-4 rounded-2xl border border-[#EADCC9] shadow-sm">
+                    < InputText   placeholder ="Digite o Ponto Turistico"  onChange ={ event  => setNome(event.target.value)}  className ="border-[#EADCC9] focus:border-[#57C5B6]" />
+                    < Button   type ="submit"
+                        style ="bg-[#1A5F7A] hover:bg-[#124559] text-white font-semibold"
+                        label ="Pesquisar"/>
+                </section>
+
+                <div  className ="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full mt-8 justify-items-center">
+                    {renderizarTelaPonto()}
+                </div>
+            </div>
+        </div>
+        </ Template >
     )
 }
