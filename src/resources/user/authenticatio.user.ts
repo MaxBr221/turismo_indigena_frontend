@@ -77,21 +77,26 @@ class UserAuth{
         }catch(error){}
 
     }
-    getUserSession() : UsuarioSessaoToken | null {
-        try{
-            const sessaoUser = localStorage.getItem(UserAuth.AUTH_PARAM);
-            if(!sessaoUser){
-                console.log("token do getSessioNull: ", sessaoUser);
-                return null;  
-            }
-            const token:UsuarioSessaoToken = JSON.parse(sessaoUser);
-            console.log("nome no token: ", token.nome);
-            return token;
-        }catch(error){
-            console.error("Erro ao buscar token: ", error);
-            return null;
-        }
+    getUserSession(): UsuarioSessaoToken | null {
+    // 🔍 CORREÇÃO: Verifica se estamos no ambiente do navegador (Client-side)
+    if (typeof window === "undefined") {
+        return null;
     }
+
+    try {
+        const sessaoUser = localStorage.getItem(UserAuth.AUTH_PARAM);
+        if (!sessaoUser) {
+            console.log("token do getSessioNull: ", sessaoUser);
+            return null;  
+        }
+        const token: UsuarioSessaoToken = JSON.parse(sessaoUser);
+        console.log("nome no token: ", token.nome);
+        return token;
+    } catch (error) {
+        console.error("Erro ao buscar token: ", error);
+        return null;
+    }
+}
     getUserLogado(){
         const sessao = this.getUserSession();
         if(!sessao){
