@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 
 
 class UserAuth{
-    baseString: string = "http://localhost:8081/auth";
+    baseString: string = "https://turismo-indigena.onrender.com/auth";
     static AUTH_PARAM: string = "_auth";
 
      async userAuthentication(credencial: Credencial): Promise<TokenAcesso>{
