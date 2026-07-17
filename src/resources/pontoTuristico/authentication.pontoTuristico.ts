@@ -1,7 +1,7 @@
 import { PontoTuristico } from "./pontoTuristico";
 
 class AuthenticationPonto{
-    baseUrl: string = 'http://localhost:8081/pontoTuristico/pontos';
+    baseUrl: string = "https://turismo-indigena.onrender.com/pontoTuristico/pontos";
 
     async buscar (): Promise<PontoTuristico[]>{
         try{

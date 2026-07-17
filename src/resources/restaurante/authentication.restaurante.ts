@@ -1,7 +1,7 @@
 import { Restaurante } from "./restaurante.resource";
 
 class AuthRestaurante{
-    baseUrl: string = 'http://localhost:8081/restaurantes/restaurantePaginacao';
+    baseUrl: string = "https://turismo-indigena.onrender.com/restaurantes/restaurantePaginacao";
 
     async busca(): Promise<Restaurante[]> {
         try{

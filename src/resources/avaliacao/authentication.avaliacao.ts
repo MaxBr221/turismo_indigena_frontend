@@ -4,17 +4,16 @@ import { userAuth } from "../user/authenticatio.user";
 import { notification } from "@/componente/notification";
 
 class AuthenticationAvaliacao{
-    baseString: string = "http://localhost:8081/avaliacao"
+    baseString: string = "https://turismo-indigena.onrender.com/avaliacao";
     notification: any;
     
     constructor(notificationService: any) {
-        this.notification = notificationService; // 🎯 Injeta aqui
+        this.notification = notificationService; 
     }
 
     async avaliarRestaurante(idRestaurante: number, nota: number, comentario?: string){
         const auth = userAuth();
         try{
-            // 1️⃣ Recupera o objeto de sessão completo usando o seu método
             const sessao = auth.getUserSession(); 
         
             const tokenStr = sessao ? sessao.token : null;
