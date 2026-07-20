@@ -4,8 +4,8 @@ import { userAuth } from "../user/authenticatio.user";
 import { notification } from "@/componente/notification";
 
 class AuthenticationAvaliacao{
-    //baseString: string = "https://turismo-indigena.onrender.com/avaliacao";
-    baseString: string = "http://localhost:8081/avaliacao";
+    baseString: string = "https://turismo-indigena.onrender.com/avaliacao";
+   // baseString: string = "http://localhost:8081/avaliacao";
     notification: any;
     
     constructor(notificationService: any) {
