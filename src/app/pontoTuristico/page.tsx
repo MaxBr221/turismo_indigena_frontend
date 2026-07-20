@@ -31,16 +31,19 @@ export default function PontoPage(){
             return;
         }
         setCarregandoSeguranca(false);
+        if(carregandoSeguranca) return;
         async function buscarPontoTuristico() {
             try{
                 let getPontoTuristico;
-                if(!nome || nome.trim() != null){
+                if(nome && nome.trim() !== ""){
                     getPontoTuristico = await pontoService.buscarPorNome(nome);
                 }else{
                     getPontoTuristico = await pontoService.buscar();
                 }
                 console.log(getPontoTuristico, "Pontos");
-                const lista = ((getPontoTuristico as  any ).content || []);
+                const lista = Array.isArray(getPontoTuristico)
+                ? getPontoTuristico
+                : (getPontoTuristico?.content || []);
                 setListaPonto(lista);
                 if(lista.length === 0){
                     notificationPonto.notify("Nenhum Ponto Turistico encontrado!", "info")
@@ -49,7 +52,7 @@ export default function PontoPage(){
                 console.log(error)
             }
         }buscarPontoTuristico();
-    }, [nome])
+    }, [nome, carregandoSeguranca])
 
     if (carregandoSeguranca) {
         return (

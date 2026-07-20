@@ -50,10 +50,14 @@ export default function RestaurantePage(){
                 } else {
                     getRestaurantes = await restauranteService.busca();
                 }
-                const lista =  Array .isArray(getRestaurantes)
+                const lista =  Array.isArray(getRestaurantes)
                 ? getRestaurantes
                 : (getRestaurantes?.content || []);
                 setRestaurante(lista);
+                if(lista.length === 0){
+                    notificationRest.notify("Não existe restaurante no momento!", "info");
+                }
+
             } catch(error){
                 console.error("Erro ao buscarRestaurantes: ", error);
             }

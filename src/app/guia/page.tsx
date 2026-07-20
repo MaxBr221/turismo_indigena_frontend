@@ -36,9 +36,11 @@ export default function guiaPage(){
                     getGuide = await auth.buscarGuia();
                 }
                 console.log("guias:", getGuide);
-                const listaGuia = ((getGuide as  any ).content || []);
-                setGuia(listaGuia);
-                if(listaGuia.length === 0){
+                const lista = Array.isArray(getGuide)
+                ? getGuide
+                : (getGuide?.content || []);
+                setGuia(lista);
+                if(lista.length === 0){
                     notificationGuia.notify("Nenhum guia encontrado!", "info");
                 }
             }catch(error){
@@ -97,7 +99,7 @@ export default function guiaPage(){
         < Template >
         <div  className ="w-full text-center mt-4 text-gray-800 bg-[#FDFBF7] min-h-screen">
             <div  className ="mt-5 py-3">
-                <h2  className ="font-bold text-2xl text-[#C05C32]">Guias Turísticos</h2>
+                <h2  className ="font-bold text-3xl text-[#1A5F7A]">Guias Turísticos</h2>
             </div>
 
             <div  className ="gap-3 mt-4 py-4 p-6 rounded-xl">

@@ -1,7 +1,8 @@
 import { PontoTuristico } from "./pontoTuristico";
 
 class AuthenticationPonto{
-    baseUrl: string = "https://turismo-indigena.onrender.com/pontoTuristico/pontos";
+   // baseUrl: string = "https://turismo-indigena.onrender.com/pontoTuristico/pontos";
+    baseUrl: string = "http://localhost:8081/pontoTuristico/pontos"
 
     async buscar (): Promise<PontoTuristico[]>{
         try{
@@ -24,6 +25,9 @@ class AuthenticationPonto{
         }
     }
     async buscarPorNome(nome: string){
+        if(!nome.trim){
+            return [];
+        }
         try{
             const response = await fetch(`http://localhost:8081/pontoTuristico/busca?nome=${encodeURIComponent(nome)}`,{
                 method: 'GET',

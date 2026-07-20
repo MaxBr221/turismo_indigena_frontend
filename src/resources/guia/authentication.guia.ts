@@ -1,7 +1,9 @@
 import { Guia } from "./guia.resources";
 
 class AuthenticationGuia{
-    baseString: string = "https://turismo-indigena.onrender.com/guide";
+    //baseString: string = "https://turismo-indigena.onrender.com/guide";
+    baseString: string = "http://localhost:8081/guide";
+
     
 
     async buscarGuia(): Promise<Guia>{

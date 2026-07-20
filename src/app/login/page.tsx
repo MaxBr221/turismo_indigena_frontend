@@ -80,19 +80,17 @@ export default function LoginPage(){
 
     return(
         <Template>
-        <div  className ="w-full text-center mt-3 text-gray-800">
+        <div className="w-full max-w-md mx-auto px-5 py-6 text-gray-800">
             <div  className ="py-3">
                 <h2  className ="font-bold text-xl text-[#1A5F7A]">
                     {newUserStates ? 'Cadastro' : 'Faça Login com sua Conta'}
                 </h2>
             </div>
 
-            <div  className ="mt- sm:mx-auto sm:w-full sm:max-w-sm">
-                <form  onSubmit ={handleSubmit}  className ="space-y-2">
+            <div  className ="mx-auto sm:w-full sm:max-w-sm">
+                <form  onSubmit ={handleSubmit}  className ="space-y-3">
                     < RendeIf   condition ={newUserStates}>
-                        <div  className ="flex items-center gap-4">
-                            <label  className ="block text-sm font-medium leading-6 text-gray-700 flex items-center gap-4">Nome:</label>
-                        </div>
+                        <label  className ="block text-sm font-medium leading-6 text-gray-700 flex items-center gap-4">Nome:</label>
                         <div  className ="mt-2">
                             < InputText   className ="w-full border-[#EADCC9] focus:border-[#57C5B6]"
                                 id ="nome"
@@ -188,7 +186,7 @@ export default function LoginPage(){
                         </ RendeIf >
 
                         < RendeIf   condition ={!newUserStates}>
-                            <div  className ="mt-4 flex justify-center">
+                          <div className="mt-5 flex justify-center overflow-hidden">
                                 < GoogleOAuthProvider   clientId ="299016155532-2ni3ks08l2lrraugdn1delclh1cru4bc.apps.googleusercontent.com">
                                     < GoogleLogin
                                         onSuccess ={handleLoginGoogleSucesso}
