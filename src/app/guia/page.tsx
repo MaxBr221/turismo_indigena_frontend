@@ -26,9 +26,9 @@ export default function guiaPage(){
             return;
         }
         setCarregandoSeguranca(false);
+        if(carregandoSeguranca) return;
 
         async function buscarGuia(){
-            if(carregandoSeguranca) return;
             try{
                 let getGuide;
                 if(nome && nome.trim() !== ""){
@@ -48,7 +48,7 @@ export default function guiaPage(){
                 console.error(error);
             }
         }buscarGuia();
-    },[nome])
+    },[nome, carregandoSeguranca])
 
     if(carregandoSeguranca){
         return(
