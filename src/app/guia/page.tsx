@@ -28,9 +28,10 @@ export default function guiaPage(){
         setCarregandoSeguranca(false);
 
         async function buscarGuia(){
+            if(carregandoSeguranca) return;
             try{
                 let getGuide;
-                if(!nome || nome.trim() != null){
+                if(nome && nome.trim() !== ""){
                     getGuide = await auth.buscarPorGuia(nome);
                 }else{
                     getGuide = await auth.buscarGuia();
